@@ -1,8 +1,8 @@
 <?hh
-use NUnit\Assert;
+use NDUnit\Assert;
 
 <<TestSuite>>
-class Suite {
+class BasicSuite {
     <<Test>>
     public function assertBool(Assert $assert) : void {
         $assert->bool(false)->equalsBool(false);
@@ -41,6 +41,16 @@ class Suite {
     <<Test>>
     public function assertNotString(Assert $assert) : void {
         $assert->string("abc")->not()->equalsString("123");
+    }
+
+    <<Test>>
+    public function assertArray(Assert $assert) : void {
+        $assert->array([1,2])->equalsArray([1,2]);
+    }
+
+    <<Test>>
+    public function assertNotArray(Assert $assert) : void {
+        $assert->array([1,2])->not()->equalsArray([2,3]);
     }
 
     <<Test,Skip>>

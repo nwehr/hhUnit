@@ -1,9 +1,9 @@
 FROM hhvm/hhvm
 
-COPY src /usr/local/nunit/src
-COPY test /usr/local/nunit/test
-COPY bin/nunit /usr/local/bin/nunit
+COPY src /usr/local/ndunit/src
+COPY test /usr/local/ndunit/test
+COPY bin/ndunit /usr/local/bin/ndunit
 
-RUN chmod +x /usr/local/bin/nunit && mkdir -p /unit-tests
+RUN chmod +x /usr/local/bin/ndunit && mkdir -p /unit-tests
 
-ENTRYPOINT ["/usr/local/bin/nunit", "/unit-tests"] 
+ENTRYPOINT ["/usr/local/bin/ndunit", "/unit-tests"] 

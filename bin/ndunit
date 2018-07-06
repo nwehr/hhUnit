@@ -1,0 +1,86 @@
+#!/usr/bin/hhvm
+<?hh
+namespace NDUnit;
+
+require_once "/usr/local/ndunit/src/SourceScanner.hh";
+require_once "/usr/local/ndunit/src/Assert.hh";
+
+foreach((new SourceScanner())->scan((new Vector($argv))->removeKey(0))->sources as $source) {
+    include_once $source;
+}
+
+class UnitTester {
+    private Vector<\ReflectionClass> $classes;
+
+    private int $numAssertions = 0;
+    private int $numAssertionFailures = 0;
+
+    public function __construct() {
+        $this->classes = $this->testClasses((new Vector(get_declared_classes()))->map((string $className) ==> new \ReflectionClass($className)));
+    }
+
+    private function testClasses(Vector<\ReflectionClass> $classes) : Vector<\ReflectionClass> {
+        return $classes->filter((\ReflectionClass $class) ==> {
+            $attributes = new Map($class->getAttributes());
+
+            if($attributes->count() && $attributes->containsKey("TestSuite") && !$attributes->containsKey("Skip")) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+    private function testMethods(Vector<\ReflectionMethod> $methods) : Vector<\ReflectionMethod> {
+        return $methods->filter((\ReflectionMethod $method) ==> {
+            $attributes = new Map($method->getAttributes());
+
+            if($attributes->count() && $attributes->containsKey("Test") && !$attributes->containsKey("Skip")) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+    private function showStats() : void {
+        printf("Test Suites        : %d\n", $this->classes->count());
+        printf("Assertions         : %d\n", $this->numAssertions);
+        printf("Assertion Failures : %d\n", $this->numAssertionFailures);
+    }
+
+    public function run() : int {
+        foreach($this->classes as $class) {
+            $methods = $this->testMethods(new Vector($class->getMethods())); 
+            $instance = $class->newInstance();
+
+            foreach($methods as $method) {
+                $assert = new Assert($class->getName(), $method->getName());
+
+                $assert->success->connect((AssertResult $result) ==> {
+                    ++$this->numAssertions;
+                });
+
+                $assert->failure->connect((AssertResult $result) ==> {
+                    ++$this->numAssertions;
+                    ++$this->numAssertionFailures;
+
+                    $c = $result->class;
+                    $m = $result->method;
+                    $f = $result->file;
+                    $l = $result->line;
+
+                    echo "FAILED ASSERTION \n$c::$m at $f:$l\n\n"; 
+                });
+                
+                $method->invokeArgs($instance, [$assert]);
+            }
+        }
+
+        $this->showStats();
+
+        return $this->numAssertionFailures ? 1 : 0;
+    }
+}
+
+exit((new UnitTester())->run()); 

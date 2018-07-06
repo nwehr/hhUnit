@@ -1,5 +1,5 @@
 ### Build Docker Image
-`docker build -t nunit ./`
+`docker build -t ndunit ./`
 
 ### Run Container
-`docker run --rm -t -v $(pwd)/test:/unit-tests nunit`
+`docker run --rm -t -v $(pwd)/test:/unit-tests ndunit`

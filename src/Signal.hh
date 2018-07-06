@@ -1,5 +1,5 @@
 <?hh
-namespace NUnit;
+namespace NDUnit;
 
 class Signal {
     public function __construct(protected Vector<(function(AssertResult) : void)> $slots = Vector{}) {}

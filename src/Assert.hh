@@ -1,8 +1,8 @@
 <?hh
-namespace NUnit;
+namespace NDUnit;
 
-require_once "/usr/local/nunit/src/AssertResult.hh";
-require_once "/usr/local/nunit/src/Signal.hh";
+require_once dirname(__FILE__) . "/AssertResult.hh";
+require_once dirname(__FILE__) . "/Signal.hh";
 
 class Assert {
     private string $file = "";
@@ -12,7 +12,8 @@ class Assert {
     private ?int $int;
     private ?float $float;
     private ?string $string;
-
+    private ?array $array;
+    
     private bool $not = false;
 
     public Signal $success;
@@ -23,21 +24,21 @@ class Assert {
         $this->failure = new Signal();
     }
 
-    private function recordBacktrace(array $backtrace) {
+    private function backtrace(array $backtrace) {
         $this->file = $backtrace[0]["file"];
         $this->line = $backtrace[0]["line"];
     }
 
-    private function success() {
+    private function success() : void {
         $this->success->emit(new AssertResult($this->class, $this->method, $this->file, $this->line));
     }
 
-    private function failure() {
+    private function failure() : void {
         $this->failure->emit(new AssertResult($this->class, $this->method, $this->file, $this->line));
     }
 
-    private function eval(bool $eval) : void {
-        if($this->not ? !$eval : $eval) {
+    private function assert(bool $evaluation) : void {
+        if($this->not ? !$evaluation : $evaluation) {
             $this->success();
         } else {
             $this->failure();
@@ -50,50 +51,62 @@ class Assert {
     }
 
     public function bool(bool $bool) : Assert {
-        $this->recordBacktrace(\debug_backtrace());
         $this->bool = $bool;
-
         return $this;
     }
 
     public function int(int $int) : Assert {
-        $this->recordBacktrace(\debug_backtrace());
         $this->int = $int;
-
         return $this;
     }
 
     public function float(float $float) : Assert {
-        $this->recordBacktrace(\debug_backtrace());
         $this->float = $float;
-
         return $this;
     }
 
     public function string(string $string) : Assert {
-        $this->recordBacktrace(\debug_backtrace());
         $this->string = $string;
+        return $this;
+    }
 
+    public function array(array $array) : Assert {
+        $this->array = $array;
         return $this;
     }
 
     public function equalsBool(bool $bool) : Assert {
-        $this->eval($this->bool == $bool);
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->bool == $bool);
+
         return $this;
     }
 
     public function equalsInt(int $int) : Assert {
-        $this->eval($this->int == $int);
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->int == $int);
+
         return $this;
     }
 
     public function equalsFloat(float $float) : Assert {
-        $this->eval($this->float == $float);
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->float == $float);
+
         return $this;
     }
 
     public function equalsString(string $string) : Assert {
-        $this->eval($this->string == $string);
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->string == $string);
+
+        return $this;
+    }
+
+    public function equalsArray(array $array) : Assert {
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->array == $array);
+
         return $this;
     }
 }
