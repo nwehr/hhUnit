@@ -1,11 +1,11 @@
-# NDUnit
+# hUnit
 
 A unit test framework specifically for the Hack language.
 
 ## Build
 
 ```
-docker build -t hunit ./
+docker build -t hunit .
 ```
 
 ## Usage
@@ -29,12 +29,64 @@ class MyTestSuite {
 
     <<Test>>
     public function someTest(Assert $assert) : void {
-        $assert->int(1)->equalsInt(1);
+        $assert->int(1)->equalToInt(1);
     }
 
     <<Test, Skip>>
     public function skippedTest(Assert $assert) : void {
-        $assert->bool(true)->equalsBool(false);
+        $assert->bool(true)->equalToBool(false);
     }
 }
+```
+
+## Assertions
+
+All of the scalar types are available in the `Assert` class. 
+
+- `bool`
+- `int`
+- `float`
+- `string`
+- `array`
+
+Any assertion may be negated by calling `not()` before the final assertion method. 
+
+```
+$assert->bool(true)->not()->equalToBool(false);
+```
+
+### Bool Assertions
+
+```
+$assert->bool(true)->equalToBool(true);
+```
+
+### Int Assertions
+
+```
+$assert->int(1)->equalToInt(1);
+
+$assert->int(1)->greaterThanInt(0);
+$assert->int(1)->greaterThanOrEqualToInt(0);
+
+$assert->int(0)->lessThanInt(1);
+$assert->int(0)->lessThanOrEqualToInt(1);
+```
+
+### Float Assertions
+
+```
+$assert->float(1.1)->equalToFloat(1.1);
+```
+
+### String Assertions
+
+```
+$assert->string("abc")->equalToString("abc");
+```
+
+### Array Assertions
+
+```
+$assert->array([1,2,3])->equalToArray([1,2,3]);
 ```

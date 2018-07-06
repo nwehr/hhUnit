@@ -80,35 +80,63 @@ class Assert {
         return $this;
     }
 
-    public function equalsBool(bool $bool) : Assert {
+    public function equalToBool(bool $bool) : Assert {
         $this->backtrace(\debug_backtrace());
         $this->assert($this->bool == $bool);
 
         return $this;
     }
 
-    public function equalsInt(int $int) : Assert {
+    public function equalToInt(int $int) : Assert {
         $this->backtrace(\debug_backtrace());
         $this->assert($this->int == $int);
 
         return $this;
     }
 
-    public function equalsFloat(float $float) : Assert {
+    public function greaterThanInt(int $int) : Assert {
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->int > $int);
+
+        return $this;
+    }
+
+    public function greaterThanOrEqualToInt(int $int) : Assert {
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->int >= $int);
+
+        return $this;
+    }
+
+    public function lessThanInt(int $int) : Assert {
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->int < $int);
+
+        return $this;
+    }
+
+    public function lessThanOrEqualToInt(int $int) : Assert {
+        $this->backtrace(\debug_backtrace());
+        $this->assert($this->int <= $int);
+
+        return $this;
+    }
+
+    public function equalToFloat(float $float) : Assert {
         $this->backtrace(\debug_backtrace());
         $this->assert($this->float == $float);
 
         return $this;
     }
 
-    public function equalsString(string $string) : Assert {
+    public function equalToString(string $string) : Assert {
         $this->backtrace(\debug_backtrace());
         $this->assert($this->string == $string);
 
         return $this;
     }
 
-    public function equalsArray(array $array) : Assert {
+    public function equalToArray(array $array) : Assert {
         $this->backtrace(\debug_backtrace());
         $this->assert($this->array == $array);
 
