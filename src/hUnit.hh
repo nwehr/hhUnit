@@ -57,11 +57,11 @@ class hUnit {
         printf("FAILED \n%s::%s at %s:%d\n\n", $result->class, $result->method, $result->file, $result->line);
     }
 
-    public function handleSuccess(AssertResult $result) {
+    public function handleSuccess(AssertionResult $result) {
         ++$this->numAssertions;
     } 
 
-    public function handleFailure(AssertResult $result) {
+    public function handleFailure(AssertionResult $result) {
         ++$this->numAssertions;
         ++$this->numAssertionFailures;
 
@@ -75,7 +75,7 @@ class hUnit {
             $tests = $this->filterMethodsForTests(new Vector($suite->getMethods())); 
             
             foreach($tests as $test) {
-                $assert = new Assert($suite->getName(), $test->getName());
+                $assert = new Assert();
 
                 $assert->success->connect(inst_meth($this, "handleSuccess"));
                 $assert->failure->connect(inst_meth($this, "handleFailure"));

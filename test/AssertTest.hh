@@ -10,12 +10,12 @@ use hUnit\Assert;
 class BoolAssertionTestSuite {
     <<Test>>
     public function assertBool(Assert $assert) : void {
-        $assert->bool(false)->EqualToBool(false);
+        $assert->bool(true)->EqualToBool(true);
     }
 
     <<Test>>
     public function assertNotBool(Assert $assert) : void {
-        $assert->bool(false)->not()->EqualToBool(true);
+        $assert->bool(true)->not()->EqualToBool(false);
     }
 }
 

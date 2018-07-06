@@ -7,15 +7,15 @@
 namespace hUnit;
 
 class Signal {
-    public function __construct(protected Vector<(function(AssertResult) : void)> $slots = Vector{}) {}
+    public function __construct(protected Vector<(function(AssertionResult) : void)> $slots = Vector{}) {}
 
-    public function connect((function(AssertResult) : void) $slot) {
+    public function connect((function(AssertionResult) : void) $slot) {
         $this->slots->add($slot);
     }
  
-    public function emit(AssertResult $assertResult) {
+    public function emit(AssertionResult $result) {
         foreach($this->slots as $slot) {
-            $slot($assertResult);
+            $slot($result);
         }
     }
 }

@@ -6,7 +6,7 @@
 
 namespace hUnit;
 
-class AssertResult {
+class AssertionResult {
     public function __construct(public string $class, public string $method, public string $file, public int $line) {
 
     }
