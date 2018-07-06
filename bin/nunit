@@ -1,0 +1,75 @@
+#!/usr/bin/hhvm
+<?hh
+namespace NUnit;
+
+require_once "/usr/local/nunit/src/Assert.hh";
+
+$numTestSuits = 0;
+$numTests = 0;
+$numAssertions = 0;
+$numAssertionFailures = 0;
+
+for($i = 1; $i < count($argv); ++$i) {
+    if(is_dir($argv[$i])) {
+        $dir = dir($argv[$i]);
+
+        while (false !== ($entry = $dir->read())) {
+            if(!is_dir($entry)) {
+                include_once($dir->path . "/" . $entry);
+            }
+        }
+    } else {
+        include_once $argv[$i];
+    }
+}
+
+$classes = (new Vector(get_declared_classes()))->map((string $className) ==> new \ReflectionClass($className));
+
+foreach($classes as $class) {
+    $classAttributes = new Map($class->getAttributes());
+
+    if($classAttributes->count() && $classAttributes->containsKey("TestSuite") && !$classAttributes->containsKey("Skip")) {
+        ++$numTestSuits;
+
+        $instance = $class->newInstance();
+
+        $methods = $class->getMethods();
+
+        foreach($methods as $method) {
+            $methodAttributes = new Map($method->getAttributes());
+
+            if($methodAttributes->count() && $methodAttributes->containsKey("Test") && !$methodAttributes->containsKey("Skip")) {
+                ++$numTests;
+
+                $assert = new Assert($class->getName(), $method->getName());
+
+                $assert->success->connect(function(AssertResult $result) use(&$numAssertions) {
+                    ++$numAssertions;
+                });
+
+                $assert->failure->connect(function(AssertResult $result) use(&$numAssertions, &$numAssertionFailures) {
+                    ++$numAssertions;
+                    ++$numAssertionFailures;
+
+                    $c = $result->class;
+                    $m = $result->method;
+                    $f = $result->file;
+                    $l = $result->line;
+
+                    echo "FAILED ASSERTION \n$c::$m at $f:$l\n\n"; 
+                });
+                
+                $method->invokeArgs($instance, [$assert]);
+            }
+        }
+    }
+}
+
+echo "Test Suites        : $numTestSuits\n";
+echo "Tests              : $numTests\n";
+echo "Assertions         : $numAssertions\n";
+echo "Assertion Failures : $numAssertionFailures\n";
+
+if($numAssertionFailures) {
+    exit(1);
+}
