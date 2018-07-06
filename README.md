@@ -5,15 +5,15 @@ A unit test framework specifically for the Hack language.
 ## Build
 
 ```
-docker build -t ndunit ./
+docker build -t hunit ./
 ```
 
 ## Usage
 
-Share your whole project directory to `/unit-tests` using volumes. NDUnit will recursively search all directories and files for test suites.
+Share your whole project directory to `/unit-tests` using volumes. hUnit will recursively search all directories and files for test suites.
 
 ```
-docker run --rm -t -v $(pwd)/test:/unit-tests ndunit
+docker run --rm -t -v $(pwd)/test:/unit-tests hunit
 ```
 
 ## Test Suites
@@ -22,7 +22,7 @@ To create a test suite, write a class with the `<<TestSuite>>` attribute. Indivi
 
 ```
 <?hh
-use NDUnit\Assert;
+use hUnit\Assert;
 
 <<TestSuite>>
 class MyTestSuite {

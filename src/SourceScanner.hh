@@ -7,37 +7,37 @@
 namespace hUnit;
 
 class SourceScanner {
-    public Vector<string> $sources = Vector{};
+    public Vector<string> $sourceFiles = Vector{};
 
     private function isSourceFile(string $path) : bool {
-        $info = new Map(pathinfo($path));
+        $pathInfo = new Map(pathinfo($path));
 
-        if($info->containsKey("extension") && $info["extension"] == "hh") {
+        if($pathInfo->containsKey("extension") && $pathInfo["extension"] == "hh") {
             return true; 
         } else {
             return false;
         }
     }
 
-    private function scan(string $path) : void {
+    private function scanPath(string $path) : void {
         if(is_dir($path)) {
-            $dir = dir($path);
+            $directory = dir($path);
 
-            while(false !== ($entry = $dir->read())) {
+            while(($entry = $directory->read())) {
                 if($entry == "." || $entry == "..") {
                     continue;
                 }
 
-                $this->scan($dir->path . "/" . $entry);
+                $this->scanPath($directory->path . "/" . $entry);
             }
         } else if($this->isSourceFile($path)) {
-            $this->sources->add($path);
+            $this->sourceFiles->add($path);
         }
     }
 
     public function scanPaths(Vector<string> $paths) : SourceScanner {
         foreach($paths as $path) {
-            $this->scan($path);
+            $this->scanPath($path);
         }
 
         return $this;
