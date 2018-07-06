@@ -1,20 +1,25 @@
 <?hh
+//
+// Copyright 2018 Nathan Wehr. All rights reserved.
+// See LICENSE.txt
+// 
+
 namespace NDUnit;
 
 class SourceScanner {
     public Vector<string> $sources = Vector{};
 
-    private function isSourceFile(string $path) {
-        $info = pathinfo($path);
+    private function isSourceFile(string $path) : bool {
+        $info = new Map(pathinfo($path));
 
-        if(array_key_exists("extension", $info) && ($info["extension"] == "hh" || $info["extension"] == "php")) {
+        if($info->containsKey("extension") && $info["extension"] == "hh") {
             return true; 
         } else {
             return false;
         }
     }
 
-    private function _scan(string $path) {
+    private function scan(string $path) : void {
         if(is_dir($path)) {
             $dir = dir($path);
 
@@ -23,24 +28,16 @@ class SourceScanner {
                     continue;
                 }
 
-                $fullEntry = $dir->path . "/" . $entry;
-
-                if(!is_dir($fullEntry) && $this->isSourceFile($fullEntry)) {
-                    $this->sources->add($fullEntry);
-                } else {
-                    $this->_scan($fullEntry);
-                }
+                $this->scan($dir->path . "/" . $entry);
             }
-        } else {
-            if($this->isSourceFile($path)) {
-                $this->sources->add($path);
-            }
+        } else if($this->isSourceFile($path)) {
+            $this->sources->add($path);
         }
     }
 
-    public function scan(Vector<string> $paths) : SourceScanner {
+    public function scanPaths(Vector<string> $paths) : SourceScanner {
         foreach($paths as $path) {
-            $this->_scan($path);
+            $this->scan($path);
         }
 
         return $this;

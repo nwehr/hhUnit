@@ -1,4 +1,9 @@
 <?hh
+//
+// Copyright 2018 Nathan Wehr. All rights reserved.
+// See LICENSE.txt
+// 
+
 namespace NDUnit;
 
 class Signal {
@@ -7,7 +12,7 @@ class Signal {
     public function connect((function(AssertResult) : void) $slot) {
         $this->slots->add($slot);
     }
-
+ 
     public function emit(AssertResult $assertResult) {
         foreach($this->slots as $slot) {
             $slot($assertResult);

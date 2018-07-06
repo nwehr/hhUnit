@@ -1,11 +1,16 @@
 #!/usr/bin/hhvm
 <?hh
+//
+// Copyright 2018 Nathan Wehr. All rights reserved.
+// See LICENSE.txt
+// 
+
 namespace NDUnit;
 
 require_once "/usr/local/ndunit/src/SourceScanner.hh";
 require_once "/usr/local/ndunit/src/Assert.hh";
 
-foreach((new SourceScanner())->scan((new Vector($argv))->removeKey(0))->sources as $source) {
+foreach((new SourceScanner())->scanPaths((new Vector($argv))->removeKey(0))->sources as $source) {
     require_once $source;
 }
 
@@ -16,14 +21,16 @@ class UnitTester {
     private int $numAssertionFailures = 0;
 
     public function __construct() {
-        $this->classes = $this->testClasses((new Vector(get_declared_classes()))->map((string $className) ==> new \ReflectionClass($className)));
+        $this->classes = $this->testClasses((new Vector(get_declared_classes()))->map((string $className) ==> {
+            return new \ReflectionClass($className);
+        }));
     }
 
     private function testClasses(Vector<\ReflectionClass> $classes) : Vector<\ReflectionClass> {
         return $classes->filter((\ReflectionClass $class) ==> {
             $attributes = new Map($class->getAttributes());
 
-            if($attributes->count() && $attributes->containsKey("TestSuite") && !$attributes->containsKey("Skip")) {
+            if($attributes->containsKey("TestSuite") && !$attributes->containsKey("Skip")) {
                 return true;
             } else {
                 return false;
@@ -35,7 +42,7 @@ class UnitTester {
         return $methods->filter((\ReflectionMethod $method) ==> {
             $attributes = new Map($method->getAttributes());
 
-            if($attributes->count() && $attributes->containsKey("Test") && !$attributes->containsKey("Skip")) {
+            if($attributes->containsKey("Test") && !$attributes->containsKey("Skip")) {
                 return true;
             } else {
                 return false;

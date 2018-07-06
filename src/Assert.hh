@@ -1,4 +1,9 @@
 <?hh
+//
+// Copyright 2018 Nathan Wehr. All rights reserved.
+// See LICENSE.txt
+// 
+
 namespace NDUnit;
 
 require_once dirname(__FILE__) . "/AssertResult.hh";
