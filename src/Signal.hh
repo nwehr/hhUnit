@@ -4,7 +4,7 @@
 // See LICENSE.txt
 // 
 
-namespace NDUnit;
+namespace hUnit;
 
 class Signal {
     public function __construct(protected Vector<(function(AssertResult) : void)> $slots = Vector{}) {}

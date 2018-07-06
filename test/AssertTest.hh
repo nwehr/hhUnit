@@ -4,7 +4,7 @@
 // See LICENSE.txt
 // 
 
-use NDUnit\Assert;
+use hUnit\Assert;
 
 <<TestSuite>>
 class BasicSuite {

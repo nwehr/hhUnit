@@ -4,7 +4,7 @@
 // See LICENSE.txt
 // 
 
-namespace NDUnit;
+namespace hUnit;
 
 class SourceScanner {
     public Vector<string> $sources = Vector{};

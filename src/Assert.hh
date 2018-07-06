@@ -4,7 +4,7 @@
 // See LICENSE.txt
 // 
 
-namespace NDUnit;
+namespace hUnit;
 
 require_once dirname(__FILE__) . "/AssertResult.hh";
 require_once dirname(__FILE__) . "/Signal.hh";
