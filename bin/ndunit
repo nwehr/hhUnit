@@ -6,7 +6,7 @@ require_once "/usr/local/ndunit/src/SourceScanner.hh";
 require_once "/usr/local/ndunit/src/Assert.hh";
 
 foreach((new SourceScanner())->scan((new Vector($argv))->removeKey(0))->sources as $source) {
-    include_once $source;
+    require_once $source;
 }
 
 class UnitTester {
