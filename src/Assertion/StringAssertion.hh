@@ -14,7 +14,6 @@ class StringAssertion extends Assertion {
     }
 
     public function equalToString(string $string) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->string == $string);
     }
 }

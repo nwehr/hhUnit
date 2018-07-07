@@ -10,6 +10,9 @@ require_once dirname(__FILE__) . "/SourceScanner.hh";
 require_once dirname(__FILE__) . "/Assert.hh";
 
 class hUnit {
+    const EXIT_NORMAL = 0;
+    const EXIT_FAILED = 1;
+
     private Vector<\ReflectionClass> $suites;
 
     private int $numAssertions = 0;
@@ -53,7 +56,7 @@ class hUnit {
         printf("Assertion Failures : %d\n", $this->numAssertionFailures);
     }
 
-    private function printFailure(AssertResult $result) : void {
+    private function printFailure(AssertionResult $result) : void {
         printf("FAILED \n%s::%s at %s:%d\n\n", $result->class, $result->method, $result->file, $result->line);
     }
 
@@ -86,6 +89,6 @@ class hUnit {
 
         $this->printStats();
 
-        return $this->numAssertionFailures ? 1 : 0;
+        return $this->numAssertionFailures ? self::EXIT_FAILED : self::EXIT_NORMAL;
     }
 }

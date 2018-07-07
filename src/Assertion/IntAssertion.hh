@@ -14,27 +14,22 @@ class IntAssertion extends Assertion {
     }
 
     public function equalToInt(int $int) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->int == $int);
     }
 
     public function greaterThanInt(int $int) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->int > $int);
     }
 
     public function greaterThanOrEqualToInt(int $int) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->int >= $int);
     }
 
     public function lessThanInt(int $int) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->int < $int);
     }
 
     public function lessThanOrEqualToInt(int $int) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->int <= $int);
     }
 }

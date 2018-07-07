@@ -14,7 +14,6 @@ class FloatAssertion extends Assertion {
     }
 
     public function equalToFloat(float $float) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->float == $float);
     }
 }

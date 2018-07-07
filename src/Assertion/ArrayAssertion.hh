@@ -14,7 +14,6 @@ class ArrayAssertion extends Assertion {
     }
 
     public function equalToArray(array $array) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->array == $array);
     }
 }

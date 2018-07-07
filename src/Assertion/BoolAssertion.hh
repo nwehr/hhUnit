@@ -14,7 +14,6 @@ class BoolAssertion extends Assertion {
     }
 
     public function equalToBool(bool $bool) : void {
-        $this->backtrace(\debug_backtrace());
         $this->assert($this->bool == $bool);
     }
 }
