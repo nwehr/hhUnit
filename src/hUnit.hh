@@ -1,20 +1,26 @@
 <?hh
 //
-// Copyright 2018 Nathan Wehr. All rights reserved.
-// See LICENSE.txt
+// Copyright 2018 hUnit project developers.
+// See COPYRIGHT.txt
 // 
+// This file is part of the hUnit project and subject to license terms.
+// See LICENSE.txt
+//  
 
 namespace hUnit;
 
-require_once dirname(__FILE__) . "/SourceScanner.hh";
 require_once dirname(__FILE__) . "/Assert.hh";
 
+class Exit {
+    const OK = 0;
+    const ERROR = 1;
+}
+
 class hUnit {
-    const EXIT_NORMAL = 0;
-    const EXIT_FAILED = 1;
+    private Vector<\ReflectionClass> $testSuites;
 
-    private Vector<\ReflectionClass> $suites;
-
+    private int $numTestSuites = 0;
+    private int $numTests = 0;
     private int $numAssertions = 0;
     private int $numAssertionFailures = 0;
 
@@ -23,11 +29,11 @@ class hUnit {
             return new \ReflectionClass($className);
         });
 
-        $this->suites = $this->filterClassesForTestSuites($classes);
+        $this->testSuites = $this->getTestSuitesFromClasses($classes);
     }
 
-    private function filterClassesForTestSuites(Vector<\ReflectionClass> $classes) : Vector<\ReflectionClass> {
-        return $classes->filter((\ReflectionClass $class) ==> {
+    private function getTestSuitesFromClasses(Vector<\ReflectionClass> $classes) : Vector<\ReflectionClass> {
+        $testSuites = $classes->filter((\ReflectionClass $class) ==> {
             $attributes = new Map($class->getAttributes());
 
             if($attributes->containsKey("TestSuite") && !$attributes->containsKey("Skip")) {
@@ -36,10 +42,14 @@ class hUnit {
                 return false;
             }
         });
+
+        $this->numTestSuites += $testSuites->count();
+
+        return $testSuites;
     }
 
-    private function filterMethodsForTests(Vector<\ReflectionMethod> $methods) : Vector<\ReflectionMethod> {
-        return $methods->filter((\ReflectionMethod $method) ==> {
+    private function getTestsFromMethods(Vector<\ReflectionMethod> $methods) : Vector<\ReflectionMethod> {
+        $tests = $methods->filter((\ReflectionMethod $method) ==> {
             $attributes = new Map($method->getAttributes());
 
             if($attributes->containsKey("Test") && !$attributes->containsKey("Skip")) {
@@ -48,47 +58,53 @@ class hUnit {
                 return false;
             }
         });
+
+        $this->numTests += $tests->count();
+
+        return $tests;
     }
 
     private function printStats() : void {
-        printf("Test Suites        : %d\n", $this->suites->count());
+        printf("Test Suites        : %d\n", $this->numTestSuites);
+        printf("Tests              : %d\n", $this->numTests);
         printf("Assertions         : %d\n", $this->numAssertions);
         printf("Assertion Failures : %d\n", $this->numAssertionFailures);
     }
 
-    private function printFailure(AssertionResult $result) : void {
-        printf("FAILED \n%s::%s at %s:%d\n\n", $result->class, $result->method, $result->file, $result->line);
+    private function printFailure(AssertionLocation $location) : void {
+        printf("FAILED \n%s::%s at %s:%d\n\n", $location->testSuite, $location->test, $location->file, $location->line);
     }
 
-    public function handleSuccess(AssertionResult $result) {
-        ++$this->numAssertions;
-    } 
-
-    public function handleFailure(AssertionResult $result) {
-        ++$this->numAssertions;
-        ++$this->numAssertionFailures;
-
-        $this->printFailure($result);
+    private function handleAssertSignals(Assert $assert) : void {
+        
     }
 
     public function run() : int {
-        foreach($this->suites as $suite) {
-            $instance = $suite->newInstance();
+        foreach($this->testSuites as $testSuite) {
+            $testSuiteInstance = $testSuite->newInstance();
 
-            $tests = $this->filterMethodsForTests(new Vector($suite->getMethods())); 
+            $tests = $this->getTestsFromMethods(new Vector($testSuite->getMethods()));
             
             foreach($tests as $test) {
-                $assert = new Assert();
+                using($assert = new Assert()) {
+                    $assert->success->connect((AssertionLocation $location) ==> {
+                        ++$this->numAssertions;
+                    });
 
-                $assert->success->connect(inst_meth($this, "handleSuccess"));
-                $assert->failure->connect(inst_meth($this, "handleFailure"));
+                    $assert->failure->connect((AssertionLocation $location) ==> {
+                        ++$this->numAssertions;
+                        ++$this->numAssertionFailures;
+
+                        $this->printFailure($location);
+                    });
                 
-                $test->invokeArgs($instance, [$assert]);
+                    $test->invokeArgs($testSuiteInstance, [$assert]);
+                }
             }
         }
 
         $this->printStats();
 
-        return $this->numAssertionFailures ? self::EXIT_FAILED : self::EXIT_NORMAL;
+        return $this->numAssertionFailures ? Exit::ERROR : Exit::OK;
     }
 }

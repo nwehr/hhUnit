@@ -1,6 +1,9 @@
 <?hh
 //
-// Copyright 2018 Nathan Wehr. All rights reserved.
+// Copyright 2018 hUnit project developers.
+// See COPYRIGHT.txt
+// 
+// This file is part of the hUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
@@ -9,11 +12,9 @@ namespace hUnit;
 require_once dirname(__FILE__) . "/Assertion.hh";
 
 class FloatAssertion extends Assertion {
-    public function __construct(private float $float, Signal $success, Signal $failure) {
-        parent::__construct($success, $failure);
-    }
+    public function __construct(private float $float) {}
 
-    public function equalToFloat(float $float) : void {
+    public function equalTo(float $float) : void {
         $this->assert($this->float == $float);
     }
 }

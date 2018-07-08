@@ -1,0 +1,1 @@
+Copyright 2018 Nathan Wehr <gtolemans@gmail.com>. All rights reserved.

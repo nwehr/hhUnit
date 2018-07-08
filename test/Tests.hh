@@ -1,6 +1,9 @@
 <?hh
 //
-// Copyright 2018 Nathan Wehr. All rights reserved.
+// Copyright 2018 hUnit project developers.
+// See COPYRIGHT.txt
+// 
+// This file is part of the hUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
@@ -10,12 +13,12 @@ use hUnit\Assert;
 class BoolAssertionTestSuite {
     <<Test>>
     public function assertBool(Assert $assert) : void {
-        $assert->bool(true)->equalToBool(true);
+        $assert->bool(true)->equalTo(true);
     }
 
     <<Test>>
     public function assertNotBool(Assert $assert) : void {
-        $assert->bool(true)->not()->equalToBool(false);
+        $assert->bool(true)->not()->equalTo(false);
     }
 }
 
@@ -23,34 +26,34 @@ class BoolAssertionTestSuite {
 class IntAssertionTestSuite {
     <<Test>>
     public function assertEqualTo(Assert $assert) : void {
-        $assert->int(1)->equalToInt(1);
+        $assert->int(1)->equalTo(1);
     }
 
     <<Test>>
     public function assertNotEqualTo(Assert $assert) : void {
-        $assert->int(1)->not()->EqualToInt(2);
+        $assert->int(1)->not()->equalTo(2);
     }
 
     <<Test>>
     public function assertGreaterThan(Assert $assert) : void {
-        $assert->int(1)->greaterThanInt(0);
+        $assert->int(1)->greaterThan(0);
     }
 
     <<Test>>
     public function assertGreaterThanOrEqualTo(Assert $assert) : void {
-        $assert->int(1)->greaterThanOrEqualToInt(0);
-        $assert->int(1)->greaterThanOrEqualToInt(1);
+        $assert->int(1)->greaterThanOrEqualTo(0);
+        $assert->int(1)->greaterThanOrEqualTo(1);
     }
 
     <<Test>>
     public function assertLessThan(Assert $assert) : void {
-        $assert->int(0)->lessThanInt(1);
+        $assert->int(0)->lessThan(1);
     }
 
     <<Test>>
     public function assertLessThanOrEqualTo(Assert $assert) : void {
-        $assert->int(0)->lessThanOrEqualToInt(1);
-        $assert->int(0)->lessThanOrEqualToInt(0);
+        $assert->int(0)->lessThanOrEqualTo(1);
+        $assert->int(0)->lessThanOrEqualTo(0);
     }
 }
 
@@ -58,25 +61,40 @@ class IntAssertionTestSuite {
 class FloatAssertionTestSuite {
     <<Test>>
     public function assertFloat(Assert $assert) : void {
-        $assert->float(1.0)->equalToFloat(1.0);
+        $assert->float(1.1)->equalTo(1.1);
     }
 
     <<Test>>
     public function assertNotFloat(Assert $assert) : void {
-        $assert->float(1.0)->not()->equalToFloat(2.0);
+        $assert->float(1.1)->not()->equalTo(1.2);
     }
 }
 
 <<TestSuite>>
 class StringAssertionTestSuite {
     <<Test>>
-    public function assertString(Assert $assert) : void {
-        $assert->string("abc")->equalToString("abc");
+    public function equalTo(Assert $assert) : void {
+        $assert->string("abc")->equalTo("abc");
     }
 
     <<Test>>
-    public function assertNotString(Assert $assert) : void {
-        $assert->string("abc")->not()->equalToString("123");
+    public function notEqualTo(Assert $assert) : void {
+        $assert->string("abc")->not()->equalTo("123");
+    }
+
+    <<Test>>
+    public function hasLength(Assert $assert) : void {
+        $assert->string("abc")->hasLength(3);
+    }
+
+    <<Test>>
+    public function matchesPattern(Assert $assert) : void {
+        $assert->string("abc 123")->matchesPattern("/^[a-z]+ [0-9]+$/");
+    }
+
+    <<Test>>
+    public function contains(Assert $assert) : void {
+        $assert->string("gtolemans@gmail.com")->contains("gmail");
     }
 }
 
@@ -84,12 +102,12 @@ class StringAssertionTestSuite {
 class ArrayAssertionTestSuite {
     <<Test>>
     public function assertArray(Assert $assert) : void {
-        $assert->array([1,2])->equalToArray([1,2]);
+        $assert->array([1,2])->equalTo([1,2]);
     }
 
     <<Test>>
     public function assertNotArray(Assert $assert) : void {
-        $assert->array([1,2])->not()->equalToArray([2,3]);
+        $assert->array([1,2])->not()->equalTo([2,3]);
     }
 }
 
@@ -97,6 +115,6 @@ class ArrayAssertionTestSuite {
 class BasicTestSuite {
     <<Test, Skip>>
     public function skipMe(Assert $assert) : void {
-        $assert->bool(true)->equalToBool(false);
+        $assert->bool(true)->equalTo(false);
     }
 }

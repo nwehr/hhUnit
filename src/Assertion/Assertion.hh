@@ -1,42 +1,48 @@
 <?hh
 //
-// Copyright 2018 Nathan Wehr. All rights reserved.
+// Copyright 2018 hUnit project developers.
+// See COPYRIGHT.txt
+// 
+// This file is part of the hUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
 namespace hUnit;
 
-require_once dirname(__FILE__) . "/AssertionResult.hh";
+require_once dirname(__FILE__) . "/AssertionLocation.hh";
 require_once dirname(__FILE__) . "/../Signal.hh";
 
 class Assertion {
-    private string $class = "";
-    private string $method = "";
-    private string $file = "";
-    private int $line = 0;
+    private bool $not = false;
 
-    protected bool $not = false;
+    public Signal $success = new Signal();
+    public Signal $failure = new Signal();
 
-    public function __construct(protected Signal $success, protected Signal $failure) {}
-
-    protected function backtrace() {
+    private function backtrace() : (string, string, string, int) {
         $trace = \debug_backtrace();
 
-        $this->file = $trace[2]["file"];
-        $this->line = $trace[2]["line"];
+        $assertionDepth = 2;
+        $testDepth = 3;
 
-        $this->class = $trace[3]["class"];
-        $this->method = $trace[3]["function"];
+        return tuple($trace[$testDepth]["class"]
+            , $trace[$testDepth]["function"]
+            , $trace[$assertionDepth]["file"]
+            , $trace[$assertionDepth]["line"]);
     }
 
     protected function assert(bool $evaluation) : void {
-        $this->backtrace(); 
+        list($testSuite, $test, $file, $line) = $this->backtrace(); 
+
+        $location = new AssertionLocation($testSuite, $test, $file, $line);
 
         if($this->not ? !$evaluation : $evaluation) {
-            $this->success->emit(new AssertionResult($this->class, $this->method, $this->file, $this->line));
+            $this->success->emit($location);
         } else {
-            $this->failure->emit(new AssertionResult($this->class, $this->method, $this->file, $this->line));
+            $this->failure->emit($location);
         }
+
+        $this->success->disconnectAll();
+        $this->failure->disconnectAll();
     }
 
     public function not() : Assertion {

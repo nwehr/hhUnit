@@ -1,16 +1,20 @@
 #!/usr/bin/hhvm
 <?hh
 //
-// Copyright 2018 Nathan Wehr. All rights reserved.
+// Copyright 2018 hUnit project developers.
+// See COPYRIGHT.txt
+// 
+// This file is part of the hUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
 namespace hUnit;
 
+require_once "/usr/local/hUnit/src/FileSystemScanner.hh";
 require_once "/usr/local/hUnit/src/hUnit.hh";
 
 $paths = (new Vector($argv))->removeKey(0);
-$scanner = new SourceScanner();
+$scanner = new FileSystemScanner();
 
 foreach($scanner->scanPaths($paths)->sourceFiles as $file) {
     require_once $file;

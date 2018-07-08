@@ -1,12 +1,15 @@
 <?hh
 //
-// Copyright 2018 Nathan Wehr. All rights reserved.
+// Copyright 2018 hUnit project developers.
+// See COPYRIGHT.txt
+// 
+// This file is part of the hUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
 namespace hUnit;
 
-class SourceScanner {
+class FileSystemScanner {
     public Vector<string> $sourceFiles = Vector{};
 
     private function isSourceFile(string $path) : bool {
@@ -35,7 +38,7 @@ class SourceScanner {
         }
     }
 
-    public function scanPaths(Vector<string> $paths) : SourceScanner {
+    public function scanPaths(Vector<string> $paths) : FileSystemScanner {
         foreach($paths as $path) {
             $this->scanPath($path);
         }

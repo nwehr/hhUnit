@@ -1,6 +1,9 @@
 <?hh
 //
-// Copyright 2018 Nathan Wehr. All rights reserved.
+// Copyright 2018 hUnit project developers.
+// See COPYRIGHT.txt
+// 
+// This file is part of the hUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
@@ -9,27 +12,25 @@ namespace hUnit;
 require_once dirname(__FILE__) . "/Assertion.hh";
 
 class IntAssertion extends Assertion {
-    public function __construct(private int $int, Signal $success, Signal $failure) {
-        parent::__construct($success, $failure);
-    }
+    public function __construct(private int $int) {}
 
-    public function equalToInt(int $int) : void {
+    public function equalTo(int $int) : void {
         $this->assert($this->int == $int);
     }
 
-    public function greaterThanInt(int $int) : void {
+    public function greaterThan(int $int) : void {
         $this->assert($this->int > $int);
     }
 
-    public function greaterThanOrEqualToInt(int $int) : void {
+    public function greaterThanOrEqualTo(int $int) : void {
         $this->assert($this->int >= $int);
     }
 
-    public function lessThanInt(int $int) : void {
+    public function lessThan(int $int) : void {
         $this->assert($this->int < $int);
     }
 
-    public function lessThanOrEqualToInt(int $int) : void {
+    public function lessThanOrEqualTo(int $int) : void {
         $this->assert($this->int <= $int);
     }
 }
