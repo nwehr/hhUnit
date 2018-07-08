@@ -29,12 +29,12 @@ class MyTestSuite {
 
     <<Test>>
     public function someTest(Assert $assert) : void {
-        $assert->int(1)->equalToInt(1);
+        $assert->int(1)->equalTo(1);
     }
 
     <<Test, Skip>>
     public function skippedTest(Assert $assert) : void {
-        $assert->bool(true)->equalToBool(false);
+        $assert->bool(true)->equalTo(false);
     }
 }
 ```
