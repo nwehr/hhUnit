@@ -89,7 +89,7 @@ class StringAssertionTestSuite {
 
     <<Test>>
     public function matchesPattern(Assert $assert) : void {
-        $assert->string("abc 123")->matchesPattern("/^[a-z]+ [0-9]+$/");
+        $assert->string("gtolemans@gmail.com")->matchesPattern("/^\S+@\S+\.\S+$/");
     }
 
     <<Test>>
@@ -109,12 +109,9 @@ class ArrayAssertionTestSuite {
     public function assertNotArray(Assert $assert) : void {
         $assert->array([1,2])->not()->equalTo([2,3]);
     }
-}
 
-<<TestSuite>>
-class BasicTestSuite {
-    <<Test, Skip>>
-    public function skipMe(Assert $assert) : void {
-        $assert->bool(true)->equalTo(false);
+    <<Test>>
+    public function contains(Assert $assert) : void {
+        $assert->array([1,2,3])->contains(1);
     }
 }

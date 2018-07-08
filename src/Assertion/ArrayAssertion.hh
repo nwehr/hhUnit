@@ -17,4 +17,8 @@ class ArrayAssertion extends Assertion {
     public function equalTo(array $array) : void {
         $this->assert($this->array == $array);
     }
+
+    public function contains(mixed $needle) : void {
+        $this->assert(in_array($needle, $this->array));
+    }
 }

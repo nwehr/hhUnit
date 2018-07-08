@@ -52,41 +52,45 @@ All of the scalar types are available in the `Assert` class.
 Any assertion may be negated by calling `not()` before the final assertion method. 
 
 ```
-$assert->bool(true)->not()->equalToBool(false);
+$assert->bool(true)->not()->equalTo(false);
 ```
 
 ### Bool Assertions
 
 ```
-$assert->bool(true)->equalToBool(true);
+$assert->bool(true)->equalTo(true);
 ```
 
 ### Int Assertions
 
 ```
-$assert->int(1)->equalToInt(1);
+$assert->int(1)->equalTo(1);
 
-$assert->int(1)->greaterThanInt(0);
-$assert->int(1)->greaterThanOrEqualToInt(0);
+$assert->int(1)->greaterThan(0);
+$assert->int(1)->greaterThanOrEqualTo(0);
 
-$assert->int(0)->lessThanInt(1);
-$assert->int(0)->lessThanOrEqualToInt(1);
+$assert->int(0)->lessThan(1);
+$assert->int(0)->lessThanOrEqualTo(1);
 ```
 
 ### Float Assertions
 
 ```
-$assert->float(1.1)->equalToFloat(1.1);
+$assert->float(1.1)->equalTo(1.1);
 ```
 
 ### String Assertions
 
 ```
-$assert->string("abc")->equalToString("abc");
+$assert->string("abc")->equalTo("abc");
+$assert->string("abc")->hasLength(3);
+$assert->string("gtolemans@gmail.com")->contains("gmail");
+$assert->string("gtolemans@gmail.com")->matchesPattern("/^\S+@\S+\.\S+$/");
 ```
 
 ### Array Assertions
 
 ```
-$assert->array([1,2,3])->equalToArray([1,2,3]);
+$assert->array([1,2,3])->equalTo([1,2,3]);
+$assert->array([1,2,3])->contains(1);
 ```
