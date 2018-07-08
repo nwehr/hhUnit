@@ -12,7 +12,9 @@ namespace hUnit;
 require_once dirname(__FILE__) . "/Assertion.hh";
 
 class FloatAssertion extends Assertion {
-    public function __construct(private float $float) {}
+    public function __construct(private float $float, AssertSignals $signals) {
+        parent::__construct($signals);
+    }
 
     public function equalTo(float $float) : void {
         $this->assert($this->float == $float);

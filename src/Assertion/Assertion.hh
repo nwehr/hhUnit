@@ -15,8 +15,9 @@ require_once dirname(__FILE__) . "/../Signal.hh";
 class Assertion {
     private bool $not = false;
 
-    public Signal $success = new Signal();
-    public Signal $failure = new Signal();
+    public function __construct(private AssertSignals $signals) {
+
+    }
 
     private function backtrace() : (string, string, string, int) {
         $trace = \debug_backtrace();
@@ -36,13 +37,10 @@ class Assertion {
         $location = new AssertionLocation($testSuite, $test, $file, $line);
 
         if($this->not ? !$evaluation : $evaluation) {
-            $this->success->emit($location);
+            $this->signals->success()->emit($location);
         } else {
-            $this->failure->emit($location);
+            $this->signals->failure()->emit($location);
         }
-
-        $this->success->disconnectAll();
-        $this->failure->disconnectAll();
     }
 
     public function not() : Assertion {

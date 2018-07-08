@@ -12,7 +12,9 @@ namespace hUnit;
 require_once dirname(__FILE__) . "/Assertion.hh";
 
 class BoolAssertion extends Assertion {
-    public function __construct(private bool $bool) {}
+    public function __construct(private bool $bool, AssertSignals $signals) {
+        parent::__construct($signals);
+    }
 
     public function equalTo(bool $bool) : void {
         $this->assert($this->bool == $bool);

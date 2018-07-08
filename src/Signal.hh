@@ -33,3 +33,21 @@ class Signal {
         }
     }
 }
+
+class AssertSignals {
+    private Signal $success;
+    private Signal $failure;
+
+    public function __construct() {
+        $this->success = new Signal();
+        $this->failure = new Signal;
+    }
+
+    public function success() : Signal {
+        return $this->success;
+    }
+
+    public function failure() : Signal {
+        return $this->failure;
+    }
+}

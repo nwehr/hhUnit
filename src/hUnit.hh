@@ -75,8 +75,17 @@ class hUnit {
         printf("FAILED \n%s::%s at %s:%d\n\n", $location->testSuite, $location->test, $location->file, $location->line);
     }
 
-    private function handleAssertSignals(Assert $assert) : void {
-        
+    private function handleAssertSignals(AssertSignals $signals) : void {
+        $signals->success()->connect((AssertionLocation $location) ==> {
+            ++$this->numAssertions;
+        });
+
+        $signals->failure()->connect((AssertionLocation $location) ==> {
+            ++$this->numAssertions;
+            ++$this->numAssertionFailures;
+
+            $this->printFailure($location);
+        });
     }
 
     public function run() : int {
@@ -87,16 +96,7 @@ class hUnit {
             
             foreach($tests as $test) {
                 using($assert = new Assert()) {
-                    $assert->success->connect((AssertionLocation $location) ==> {
-                        ++$this->numAssertions;
-                    });
-
-                    $assert->failure->connect((AssertionLocation $location) ==> {
-                        ++$this->numAssertions;
-                        ++$this->numAssertionFailures;
-
-                        $this->printFailure($location);
-                    });
+                    $this->handleAssertSignals($assert->signals);
                 
                     $test->invokeArgs($testSuiteInstance, [$assert]);
                 }
