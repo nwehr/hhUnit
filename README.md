@@ -34,7 +34,7 @@ class MyTestSuite {
 
     <<Test, Skip>>
     public function skippedTest(Assert $assert) : void {
-        $assert->bool(true)->equalTo(false);
+        $assert->bool(true)->not()->equalTo(false);
     }
 }
 ```
