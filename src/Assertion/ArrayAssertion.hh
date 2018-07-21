@@ -12,8 +12,8 @@ namespace hUnit;
 require_once dirname(__FILE__) . "/Assertion.hh";
 
 class ArrayAssertion extends Assertion {
-    public function __construct(private array $array, AssertSignals $signals) {
-        parent::__construct($signals);
+    public function __construct(private array $array, (function(AssertionLocation) : void) $successHandler, (function(AssertionLocation) : void) $failureHandler) {
+        parent::__construct($successHandler, $failureHandler);
     }
 
     public function equalTo(array $array) : void {

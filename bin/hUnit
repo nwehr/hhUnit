@@ -20,4 +20,8 @@ foreach($scanner->scanPaths($paths)->sourceFiles as $file) {
     require_once $file;
 }
 
-exit((new hUnit())->run()); 
+$classes = (new Vector(get_declared_classes()))->map((string $className) ==> {
+    return new \ReflectionClass($className);
+});
+
+exit((new hUnit($classes))->run()); 

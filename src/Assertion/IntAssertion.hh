@@ -12,8 +12,8 @@ namespace hUnit;
 require_once dirname(__FILE__) . "/Assertion.hh";
 
 class IntAssertion extends Assertion {
-    public function __construct(private int $int, AssertSignals $signals) {
-        parent::__construct($signals);
+    public function __construct(private int $int, (function(AssertionLocation) : void) $successHandler, (function(AssertionLocation) : void) $failureHandler) {
+        parent::__construct($successHandler, $failureHandler);
     }
 
     public function equalTo(int $int) : void {

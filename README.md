@@ -2,18 +2,30 @@
 
 A unit test framework specifically for the Hack language.
 
-## Build
+## Build hUnit
 
 ```
-docker build -t hunit .
+docker build -t registry.gitlab.com/nwehr/hunit .
 ```
 
-## Usage
-
-Share your whole project directory to `/unit-tests` using volumes. hUnit will recursively search all directories and files for test suites.
+## Build/Run hunit-tester
 
 ```
-docker run --rm -t -v $(pwd)/test:/unit-tests hunit
+docker build -t hunit-tester -f Dockerfile.hunit-tester .
+docker run -t --rm hunit-tester
+```
+
+## Dockerfile.hunit-tester
+
+To use hUnit in your own project, it is recommended that you create your own `Dockerfile.hunit-tester` and build/run the tester (See above).
+
+```
+FROM registry.gitlab.com/nwehr/hunit
+
+COPY /path/to/your/tests /usr/local/tests
+
+# place your source code where it normally would be in your production container
+COPY /path/to/your/sourceFiles /path/to/your/sourceFiles 
 ```
 
 ## Test Suites

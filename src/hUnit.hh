@@ -24,11 +24,7 @@ class hUnit {
     private int $numAssertions = 0;
     private int $numAssertionFailures = 0;
 
-    public function __construct() {
-        $classes = (new Vector(get_declared_classes()))->map((string $className) ==> {
-            return new \ReflectionClass($className);
-        });
-
+    public function __construct(Vector<\ReflectionClass> $classes) {
         $this->testSuites = $this->getTestSuitesFromClasses($classes);
     }
 
@@ -75,19 +71,6 @@ class hUnit {
         printf("FAILED \n%s::%s at %s:%d\n\n", $location->testSuite, $location->test, $location->file, $location->line);
     }
 
-    private function handleAssertSignals(AssertSignals $signals) : void {
-        $signals->success()->connect((AssertionLocation $location) ==> {
-            ++$this->numAssertions;
-        });
-
-        $signals->failure()->connect((AssertionLocation $location) ==> {
-            ++$this->numAssertions;
-            ++$this->numAssertionFailures;
-
-            $this->printFailure($location);
-        });
-    }
-
     public function run() : int {
         foreach($this->testSuites as $testSuite) {
             $testSuiteInstance = $testSuite->newInstance();
@@ -95,11 +78,20 @@ class hUnit {
             $tests = $this->getTestsFromMethods(new Vector($testSuite->getMethods()));
             
             foreach($tests as $test) {
-                using($assert = new Assert()) {
-                    $this->handleAssertSignals($assert->signals);
+                $handleSuccess = (AssertionLocation $location) ==> {
+                    ++$this->numAssertions;
+                };
+
+                $handleFailure = (AssertionLocation $location) ==> {
+                    ++$this->numAssertions;
+                    ++$this->numAssertionFailures;
+
+                    $this->printFailure($location);
+                };
+
+                $assert = new Assert($handleSuccess, $handleFailure);
                 
-                    $test->invokeArgs($testSuiteInstance, [$assert]);
-                }
+                $test->invokeArgs($testSuiteInstance, [$assert]);
             }
         }
 

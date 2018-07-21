@@ -12,8 +12,8 @@ namespace hUnit;
 require_once dirname(__FILE__) . "/Assertion.hh";
 
 class StringAssertion extends Assertion {
-    public function __construct(private string $string, AssertSignals $signals) {
-        parent::__construct($signals);
+    public function __construct(private string $string, (function(AssertionLocation) : void) $successHandler, (function(AssertionLocation) : void) $failureHandler) {
+        parent::__construct($successHandler, $failureHandler);
     }
 
     public function equalTo(string $string) : void {

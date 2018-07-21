@@ -10,14 +10,11 @@
 namespace hUnit;
 
 require_once dirname(__FILE__) . "/AssertionLocation.hh";
-require_once dirname(__FILE__) . "/../Signal.hh";
 
 class Assertion {
     private bool $not = false;
 
-    public function __construct(private AssertSignals $signals) {
-
-    }
+    public function __construct(private (function(AssertionLocation) : void) $successHandler, private (function(AssertionLocation) : void) $failureHandler) {}
 
     private function backtrace() : (string, string, string, int) {
         $trace = \debug_backtrace();
@@ -37,9 +34,13 @@ class Assertion {
         $location = new AssertionLocation($testSuite, $test, $file, $line);
 
         if($this->not ? !$evaluation : $evaluation) {
-            $this->signals->success()->emit($location);
+            if($this->successHandler) {
+                call_user_func($this->successHandler, $location);
+            }
         } else {
-            $this->signals->failure()->emit($location);
+            if($this->failureHandler) {
+                call_user_func($this->failureHandler, $location);
+            }
         }
     }
 

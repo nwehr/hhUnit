@@ -9,34 +9,28 @@
 
 namespace hUnit;
 
-require_once dirname(__FILE__) . "/Signal.hh";
 require_once dirname(__FILE__) . "/Assertion/Assertion.hh";
 
-class Assert implements \IDisposable {
-    public AssertSignals $signals = new AssertSignals();
-
-    public function __dispose() {
-        $this->signals->success()->disconnectAll();
-        $this->signals->failure()->disconnectAll();
-    }
+class Assert {
+    public function __construct(private (function(AssertionLocation) : void) $successHandler, private (function(AssertionLocation) : void) $failureHandler) {}
 
     public function bool(bool $bool) : BoolAssertion {
-        return new BoolAssertion($bool, $this->signals);
+        return new BoolAssertion($bool, $this->successHandler, $this->failureHandler);
     }
 
     public function int(int $int) : IntAssertion {
-        return new IntAssertion($int, $this->signals); 
+        return new IntAssertion($int, $this->successHandler, $this->failureHandler); 
     }
 
     public function float(float $float) : FloatAssertion {
-        return new FloatAssertion($float, $this->signals);
+        return new FloatAssertion($float, $this->successHandler, $this->failureHandler);
     }
 
     public function string(string $string) : StringAssertion {
-        return new StringAssertion($string, $this->signals);
+        return new StringAssertion($string, $this->successHandler, $this->failureHandler);
     }
 
     public function array(array $array) : ArrayAssertion {
-        return new ArrayAssertion($array, $this->signals);
+        return new ArrayAssertion($array, $this->successHandler, $this->failureHandler);
     }
 }

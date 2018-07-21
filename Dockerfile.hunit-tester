@@ -1,0 +1,3 @@
+FROM registry.gitlab.com/nwehr/hunit
+
+COPY tests /usr/local/tests
