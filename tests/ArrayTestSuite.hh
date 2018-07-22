@@ -15,6 +15,6 @@ class ArrayTestSuite {
 
     <<Test>>
     public function contains(Assert $assert) : void {
-        $assert->array([1,2,3])->contains(11);
+        $assert->array([1,2,3])->contains(1);
     }
 }
