@@ -1,0 +1,24 @@
+image: docker:git
+
+services:
+  - docker:dind
+
+variables:
+  CI_REGISTRY: registry.gitlab.com
+  CI_REGISTRY_IMAGE: registry.gitlab.com/nwehr/hunit
+  
+stages:
+  - build
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+
+build:
+  stage: build
+  tags:
+    - docker
+  script:
+    - docker build --no-cache -t $CI_REGISTRY_IMAGE ./
+    - docker build -t hunit-tester -f Dockerfile.hunit-tester
+    - docker run -t --rm hunit-tester
+    - docker push $CI_REGISTRY_IMAGE
