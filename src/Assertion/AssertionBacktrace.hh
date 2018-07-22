@@ -9,8 +9,6 @@
 
 namespace hUnit;
 
-class AssertionLocation {
-    public function __construct(public string $testSuite, public string $test, public string $file, public int $line) {
-
-    }
+class AssertionBacktrace {
+    public function __construct(public string $file, public int $line) {}
 }

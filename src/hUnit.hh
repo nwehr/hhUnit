@@ -67,8 +67,12 @@ class hUnit {
         printf("Assertion Failures : %d\n", $this->numAssertionFailures);
     }
 
-    private function printFailure(AssertionLocation $location) : void {
-        printf("FAILED \n%s::%s at %s:%d\n\n", $location->testSuite, $location->test, $location->file, $location->line);
+    private function printSuccess(string $testSuiteName, string $testName, AssertionBacktrace $backtrace) : void {
+        printf("\033[1;32mSUCCESS\n%s::%s at %s:%d\033[0m\n\n", $testSuiteName, $testName, $backtrace->file, $backtrace->line);
+    }
+
+    private function printFailure(string $testSuiteName, string $testName, AssertionBacktrace $backtrace) : void {
+        printf("\033[1;31mFAILED \n%s::%s at %s:%d\033[0m\n\n", $testSuiteName, $testName, $backtrace->file, $backtrace->line);
     }
 
     public function run() : int {
@@ -78,15 +82,15 @@ class hUnit {
             $tests = $this->getTestsFromMethods(new Vector($testSuite->getMethods()));
             
             foreach($tests as $test) {
-                $handleSuccess = (AssertionLocation $location) ==> {
+                $handleSuccess = (AssertionBacktrace $backtrace) ==> {
                     ++$this->numAssertions;
                 };
 
-                $handleFailure = (AssertionLocation $location) ==> {
+                $handleFailure = (AssertionBacktrace $backtrace) ==> {
                     ++$this->numAssertions;
                     ++$this->numAssertionFailures;
 
-                    $this->printFailure($location);
+                    $this->printFailure($testSuite->getName(), $test->getName(), $backtrace);
                 };
 
                 $assert = new Assert($handleSuccess, $handleFailure);

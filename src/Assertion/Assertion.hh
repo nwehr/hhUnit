@@ -9,38 +9,29 @@
 
 namespace hUnit;
 
-require_once dirname(__FILE__) . "/AssertionLocation.hh";
+require_once dirname(__FILE__) . "/AssertionBacktrace.hh";
 
 class Assertion {
     private bool $not = false;
 
     public function __construct(private (function(AssertionLocation) : void) $successHandler, private (function(AssertionLocation) : void) $failureHandler) {}
 
-    private function backtrace() : (string, string, string, int) {
+    private function backtrace() : AssertionBacktrace {
         $trace = \debug_backtrace();
 
         $assertionDepth = 2;
         $testDepth = 3;
 
-        return tuple($trace[$testDepth]["class"]
-            , $trace[$testDepth]["function"]
-            , $trace[$assertionDepth]["file"]
-            , $trace[$assertionDepth]["line"]);
+        return new AssertionBacktrace($trace[$assertionDepth]["file"], $trace[$assertionDepth]["line"]);
     }
 
     protected function assert(bool $evaluation) : void {
-        list($testSuite, $test, $file, $line) = $this->backtrace(); 
-
-        $location = new AssertionLocation($testSuite, $test, $file, $line);
+        $backtrace = $this->backtrace(); 
 
         if($this->not ? !$evaluation : $evaluation) {
-            if($this->successHandler) {
-                call_user_func($this->successHandler, $location);
-            }
+            call_user_func($this->successHandler, $backtrace);
         } else {
-            if($this->failureHandler) {
-                call_user_func($this->failureHandler, $location);
-            }
+            call_user_func($this->failureHandler, $backtrace);
         }
     }
 
