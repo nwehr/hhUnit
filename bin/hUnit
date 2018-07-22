@@ -17,6 +17,8 @@ $paths = (new Vector($argv))->removeKey(0);
 $scanner = new FileSystemScanner();
 
 foreach($scanner->scanPaths($paths)->sourceFiles as $file) {
+    print("Include $file\n");
+    
     require_once $file;
 }
 

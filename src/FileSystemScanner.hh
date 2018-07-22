@@ -11,6 +11,7 @@ namespace hUnit;
 
 class FileSystemScanner {
     public Vector<string> $sourceFiles = Vector{};
+    private Vector<string> $ignorePaths = Vector{};
 
     private function isSourceFile(string $path) : bool {
         $pathInfo = new Map(pathinfo($path));
@@ -22,8 +23,45 @@ class FileSystemScanner {
         }
     }
 
+    private function shouldIgnore(string $path) : bool {
+        foreach($this->ignorePaths as $ignorePath) {
+            $pattern = "/^" . str_replace("/", "\/", $ignorePath) . "/";
+
+            if(preg_match($pattern, $path)) {
+                return true; 
+            }
+        }
+
+        return false;
+    }
+
+    private function scanDirectoryForIgnoreFile(string $path) : void {
+        $ignoreFilePath = $path . "/.hunitignore";
+
+        if(file_exists($ignoreFilePath)) {
+            $handle = fopen($ignoreFilePath, "r");
+
+            while(($line = fgets($handle)) !== false) {
+                $pathToIgnore = trim($line);
+                if(preg_match("/[\/A-z0-9\.]+/", $pathToIgnore)) {
+                    $this->ignorePaths->add(realpath($pathToIgnore));
+                }
+            }
+
+            fclose($handle);
+        }
+    }
+
     private function scanPath(string $path) : void {
+        if($this->shouldIgnore($path)) {
+            return;
+        }
+
         if(is_dir($path)) {
+            chdir($path);
+
+            $this->scanDirectoryForIgnoreFile($path);            
+
             $directory = dir($path);
 
             while(($entry = $directory->read())) {

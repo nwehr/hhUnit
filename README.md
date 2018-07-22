@@ -106,3 +106,12 @@ $assert->string("gtolemans@gmail.com")->matchesPattern("/^\S+@\S+\.\S+$/");
 $assert->array([1,2,3])->equalTo([1,2,3]);
 $assert->array([1,2,3])->contains(1);
 ```
+
+## Ignore
+
+To prevent hUnit from initially including unwanted source files, add a `.hunitignore` file in your tests directory.
+
+```
+./IgnoredTestSuite.hh
+../IgnoredDir
+```
