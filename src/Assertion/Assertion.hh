@@ -55,3 +55,5 @@ require_once dirname(__FILE__) . "/IntAssertion.hh";
 require_once dirname(__FILE__) . "/FloatAssertion.hh";
 require_once dirname(__FILE__) . "/StringAssertion.hh";
 require_once dirname(__FILE__) . "/ArrayAssertion.hh";
+require_once dirname(__FILE__) . "/MapAssertion.hh";
+require_once dirname(__FILE__) . "/VectorAssertion.hh";

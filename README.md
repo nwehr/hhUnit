@@ -87,6 +87,20 @@ $assert->array([1,2,3])->equalTo([1,2,3]);
 $assert->array([1,2,3])->contains(1);
 ```
 
+### Map Assertions
+
+```
+$assert->map<string, string>(Map{"key1" => "value1"})->equalTo(Map{"key1" => "value1"});
+$assert->map<string, string>(Map{"key1" => "value1"})->containsKey("key1");
+```
+
+### Vector Assertions
+
+```
+$assert->vector<string>(Vector{"value1"})->equalTo(Vector{"value1});
+$assert->vector<string>(Vector{"value1"})->containsValue("value1");
+```
+
 # Usage
 
 To use hUnit in your own project, create `Dockerfile.hunit-tester` in your project folder. Copy your tests into `/usr/local/tests`. You may also copy your entire project into `/usr/local/tests`. If you go this route, it is recommended that you utilize `.hunitignore` to prevent hunit from including source files that aren't test suites. 

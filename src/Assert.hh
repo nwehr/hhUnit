@@ -33,4 +33,12 @@ class Assert {
     public function array(array $array) : ArrayAssertion {
         return new ArrayAssertion($array, $this->successHandler, $this->failureHandler);
     }
+
+    public function map<Tk, Tv>(Map<Tk, Tv> $map) : MapAssertion {
+        return new MapAssertion<Tk, Tv>($map, $this->successHandler, $this->failureHandler);
+    }
+
+    public function vector<Tv>(Vector<Tv> $vector) : VectorAssertion {
+        return new VectorAssertion<Tv>($vector, $this->successHandler, $this->failureHandler);
+    }
 }
