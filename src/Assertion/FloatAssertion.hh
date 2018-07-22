@@ -19,4 +19,20 @@ class FloatAssertion extends Assertion {
     public function equalTo(float $float) : void {
         $this->assert($this->float == $float);
     }
+
+    public function greaterThan(float $float) : void {
+        $this->assert($this->float > $float);
+    }
+
+    public function greaterThanOrEqualTo(float $float) : void {
+        $this->assert($this->float >= $float);
+    }
+
+    public function lessThan(float $float) : void {
+        $this->assert($this->float < $float);
+    }
+
+    public function lessThanOrEqualTo(float $float) : void {
+        $this->assert($this->float <= $float);
+    }
 }
