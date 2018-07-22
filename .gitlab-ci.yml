@@ -18,7 +18,7 @@ build:
   tags:
     - docker
   script:
-    - docker build --no-cache -t $CI_REGISTRY_IMAGE ./
-    - docker build -t hunit-tester -f Dockerfile.hunit-tester
+    - docker build --no-cache -t $CI_REGISTRY_IMAGE .
+    - docker build -t hunit-tester -f Dockerfile.hunit-tester .
     - docker run -t --rm hunit-tester
     - docker push $CI_REGISTRY_IMAGE
