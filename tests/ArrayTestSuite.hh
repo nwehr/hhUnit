@@ -1,4 +1,4 @@
-<?hh
+<?hh // decl
 use hUnit\Assert;
 
 <<TestSuite>>

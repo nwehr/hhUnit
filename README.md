@@ -7,7 +7,7 @@ A unit test framework specifically for the Hack language.
 To create a test suite, write a class with the `<<TestSuite>>` attribute. Individual tests use the `<<Test>>` attribute. You can skip an entire test suite or indivitual tests using the `<<Skip>>` attribute.
 
 ```
-<?hh
+<?hh // decl
 use hUnit\Assert;
 
 <<TestSuite>>
