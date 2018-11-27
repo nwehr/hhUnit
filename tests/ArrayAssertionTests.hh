@@ -1,8 +1,10 @@
 <?hh // decl
+namespace hUnit\Tests\TypeAssertions;
+
 use hUnit\Assert;
 
 <<TestSuite>>
-class ArrayTestSuite {
+class ArrayAssertionTests {
     <<Test>>
     public function equalTo(Assert $assert) : void {
         $assert->array([1,2])->equalTo([1,2]);

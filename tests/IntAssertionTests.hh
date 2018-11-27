@@ -1,8 +1,10 @@
 <?hh // decl
+namespace hUnit\Tests\TypeAssertions;
+
 use hUnit\Assert;
 
 <<TestSuite>>
-class IntTestSuite {
+class IntAssertionTests {
     <<Test>>
     public function equalTo(Assert $assert) : void {
         $assert->int(1)->equalTo(1);

@@ -9,11 +9,15 @@
 
 namespace hUnit;
 
-class FileSystemScanner {
-    public Vector<string> $sourceFiles = Vector{};
-    private Vector<string> $ignorePaths = Vector{};
+interface IFileSystemScanner {
+    public function getSourcePaths(Vector<string> $directoryPaths) : Vector<string>;
+}
 
-    private function isSourceFile(string $path) : bool {
+class FileSystemScanner implements IFileSystemScanner {
+    protected Vector<string> $sourcePaths = Vector{};
+    protected Vector<string> $ignorePaths = Vector{};
+
+    protected function isSourceFile(string $path) : bool {
         $pathInfo = new Map(pathinfo($path));
 
         if($pathInfo->containsKey("extension") && $pathInfo["extension"] == "hh") {
@@ -23,11 +27,12 @@ class FileSystemScanner {
         }
     }
 
-    private function shouldIgnore(string $path) : bool {
+    protected function shouldIgnore(string $path) : bool {
         foreach($this->ignorePaths as $ignorePath) {
             $pattern = "/^" . str_replace("/", "\/", $ignorePath) . "/";
 
             if(preg_match($pattern, $path)) {
+                echo "$pattern == $path\n";
                 return true; 
             }
         }
@@ -35,16 +40,17 @@ class FileSystemScanner {
         return false;
     }
 
-    private function scanDirectoryForIgnoreFile(string $path) : void {
+    protected function scanDirectoryForIgnoreFile(string $path) : void {
         $ignoreFilePath = $path . "/.hunitignore";
 
         if(file_exists($ignoreFilePath)) {
             $handle = fopen($ignoreFilePath, "r");
 
             while(($line = fgets($handle)) !== false) {
-                $pathToIgnore = trim($line);
-                if(preg_match("/[\/A-z0-9\.]+/", $pathToIgnore)) {
-                    $this->ignorePaths->add(realpath($pathToIgnore));
+                $pathToIgnore = realpath(trim($line));
+
+                if($pathToIgnore) {
+                    $this->ignorePaths->add($pathToIgnore);
                 }
             }
 
@@ -52,7 +58,9 @@ class FileSystemScanner {
         }
     }
 
-    private function scanPath(string $path) : void {
+    protected function scanPath(string $path) : void {
+
+
         if($this->shouldIgnore($path)) {
             return;
         }
@@ -72,15 +80,15 @@ class FileSystemScanner {
                 $this->scanPath($directory->path . "/" . $entry);
             }
         } else if($this->isSourceFile($path)) {
-            $this->sourceFiles->add($path);
+            $this->sourcePaths->add($path);
         }
     }
 
-    public function scanPaths(Vector<string> $paths) : FileSystemScanner {
-        foreach($paths as $path) {
+    public function getSourcePaths(Vector<string> $directoryPaths) : Vector<string> {
+        foreach($directoryPaths as $path) {
             $this->scanPath($path);
         }
 
-        return $this;
+        return $this->sourcePaths;
     }
 }

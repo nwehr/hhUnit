@@ -1,8 +1,10 @@
 <?hh // decl
+namespace hUnit\Tests\TypeAssertions;
+
 use hUnit\Assert;
 
 <<TestSuite>>
-class StringTestSuite {
+class StringAssertionTests {
     <<Test>>
     public function equalTo(Assert $assert) : void {
         $assert->string("abc")->equalTo("abc");

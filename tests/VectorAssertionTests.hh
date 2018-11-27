@@ -1,8 +1,10 @@
 <?hh // decl
+namespace hUnit\Tests\TypeAssertions;
+
 use hUnit\Assert;
 
 <<TestSuite>>
-class VectorTestSuite {
+class VectorAssertionTests {
     <<Test>>
     public function equalTo(Assert $assert) : void {
         $assert->vector<string>(Vector{"value1", "value2"})->equalTo(Vector{"value1", "value2"});

@@ -1,8 +1,10 @@
 <?hh // decl
+namespace hUnit\Tests\TypeAssertions;
+
 use hUnit\Assert;
 
 <<TestSuite>>
-class MapTestSuite {
+class MapAssertionTests {
     <<Test>>
     public function equalTo(Assert $assert) : void {
         $assert->map<string, string>(Map{"key1" => "value1"})->equalTo(Map{"key1" => "value1"});

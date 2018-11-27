@@ -1,36 +1,38 @@
 <?hh // decl
+namespace hUnit\Tests\TypeAssertions;
+
 use hUnit\Assert;
 
 <<TestSuite>>
-class FloatTestSuite {
+class FloatAssertionTests {
     <<Test>>
-    public function equalTo(Assert $assert) : void {
+    public function oneEqualToOne(Assert $assert) : void {
         $assert->float(1.1)->equalTo(1.1);
     }
 
     <<Test>>
-    public function notEqualTo(Assert $assert) : void {
+    public function oneNotEqualToTwo(Assert $assert) : void {
         $assert->float(1.1)->not()->equalTo(1.2);
     }
 
     <<Test>>
-    public function greaterThan(Assert $assert) : void {
+    public function twoGreaterThanOne(Assert $assert) : void {
         $assert->float(1.2)->greaterThan(1.1);
     }
 
     <<Test>>
-    public function greaterThanOrEqualTo(Assert $assert) : void {
+    public function twoGreaterThanOrEqualToOne(Assert $assert) : void {
         $assert->float(1.2)->greaterThanOrEqualTo(1.1);
         $assert->float(1.2)->greaterThanOrEqualTo(1.2);
     }
 
     <<Test>>
-    public function lessThan(Assert $assert) : void {
+    public function oneLessThanTwo(Assert $assert) : void {
         $assert->float(1.1)->lessThan(1.2);
     }
 
     <<Test>>
-    public function lessThanOrEqualTo(Assert $assert) : void {
+    public function oneLessThanOrEqualToTwo(Assert $assert) : void {
         $assert->float(1.1)->lessThanOrEqualTo(1.2);
         $assert->float(1.1)->lessThanOrEqualTo(1.1);
     }

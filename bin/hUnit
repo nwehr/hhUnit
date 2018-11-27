@@ -10,20 +10,53 @@
 
 namespace hUnit;
 
-require_once "/usr/local/hUnit/src/FileSystemScanner.hh";
-require_once "/usr/local/hUnit/src/hUnit.hh";
+require_once dirname(__FILE__) . "/../src/Options.hh";
+require_once dirname(__FILE__) . "/../src/TestSuiteLoader.hh";
+require_once dirname(__FILE__) . "/../src/hUnit.hh";
 
-$paths = (new Vector($argv))->removeKey(0);
-$scanner = new FileSystemScanner();
+$options = Options::instance();
 
-foreach($scanner->scanPaths($paths)->sourceFiles as $file) {
-    print("Include $file\n");
-    
-    require_once $file;
+if($options->showHelp()) {
+    print("Usage: hUnit [options]\n");
+    print("  Options: \n");
+    print("    -d <directory>, a directory containing unit tests\n");
+    print("    -n <namespace>, a specified namespace to run unit tests\n");
+    print("    -l, list test suites organized by namespace\n");
+    print("    -h, display this help message\n");
+    print("  Example:\n");
+    print("    hUnit [-l] -d <directory> [-d <directory>...] [-n <namespace>...]\n");
+
+    exit(Exit::OK);
 }
 
-$classes = (new Vector(get_declared_classes()))->map((string $className) ==> {
-    return new \ReflectionClass($className);
-});
+$testSuiteLoader = TestSuiteLoader::instance(); 
 
-exit((new hUnit($classes))->run()); 
+$namespaceNames = $options->namespaceNames();
+
+if(!$namespaceNames->count()) {
+    $namespaceNames = $testSuiteLoader->getNamespaceNames();
+}
+
+if($options->listTests()) {
+    foreach($namespaceNames as $namespaceName) {
+        print("$namespaceName\n");
+
+        foreach($testSuiteLoader->getTestSuitesByNamespace($namespaceName) as $testSuite) {
+            $testSuiteName = $testSuite->getShortName();
+
+            print("    $testSuiteName\n");
+        }
+
+        print("\n");
+    }
+} else {
+    $testSuites = Vector{}; 
+
+    foreach($namespaceNames as $namespaceName) {
+        foreach($testSuiteLoader->getTestSuitesByNamespace($namespaceName) as $testSuite) {
+            $testSuites[] = $testSuite;
+        }
+    }
+
+    exit((new hUnit($testSuites))->run()); 
+}
