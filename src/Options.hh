@@ -23,7 +23,7 @@ class Options implements IOptions {
 
     public static function instance() : Options {
         if(!self::$instance) {
-            self::$instance = new self(\getopt("hld:n:"));
+            self::$instance = new self(\getopt("hld:n:i:"));
         }
 
         return self::$instance;
@@ -44,13 +44,21 @@ class Options implements IOptions {
     public function namespaceNames() : Vector<string> {
         if(!\array_key_exists("n", $this->opt)) {
             return Vector{};
-        } else {
-            if(\is_array($this->opt["n"])) {
-                return new Vector($this->opt["n"]);
-            } else {
-                return Vector{(string)$this->opt["n"]};
-            }
+        } 
+
+        if(\is_array($this->opt["n"])) {
+            return new Vector($this->opt["n"]);
+        } 
+
+        return Vector{(string)$this->opt["n"]};
+    }
+
+    public function includePaths() : Vector<string> {
+        if (\array_key_exists("i", $this->opt)) {
+            return \explode(":", (string)$this->opt["i"]) |> new Vector($$);
         }
+
+        return Vector{};
     }
 
     public function listTests() : bool {

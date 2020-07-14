@@ -29,6 +29,10 @@ if($options->showHelp()) {
     exit(Exit::OK);
 }
 
+if($options->includePaths()) {
+    \ini_set("include_path", \implode(":", $options->includePaths()));
+}
+
 $testSuiteLoader = TestSuiteLoader::instance(); 
 
 $namespaceNames = $options->namespaceNames();
