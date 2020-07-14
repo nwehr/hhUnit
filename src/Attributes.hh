@@ -9,6 +9,6 @@
 
 namespace hhUnit;
 
-class AssertionBacktrace {
-    public function __construct(public string $file, public int $line) {}
-}
+interface TestSuite extends \HH\ClassAttribute {}
+interface Test extends \HH\MethodAttribute {}
+interface Skip extends \HH\ClassAttribute, \HH\MethodAttribute {}

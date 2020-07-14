@@ -1,16 +1,16 @@
 <?hh
 //
-// Copyright 2018 hUnit project developers.
+// Copyright 2018-2020 Nathan Wehr.
 // See COPYRIGHT.txt
 // 
-// This file is part of the hUnit project and subject to license terms.
+// This file is part of the hhUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
-namespace hUnit;
+namespace hhUnit;
 
-require_once dirname(__FILE__) . "/FileSystemScanner.hh";
-require_once dirname(__FILE__) . "/ReflectionTestSuite.hh";
+require_once \dirname(__FILE__) . "/FileSystemScanner.hh";
+require_once \dirname(__FILE__) . "/ReflectionTestSuite.hh";
 
 class TestSuiteLoader {
     protected static ?TestSuiteLoader $instance = null; 
@@ -40,7 +40,7 @@ class TestSuiteLoader {
                 require_once $path;
             }
 
-            $classNames = new Vector(get_declared_classes());
+            $classNames = new Vector(\get_declared_classes());
             
             self::$instance = new self($classNames);
         }

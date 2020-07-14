@@ -1,20 +1,23 @@
 <?hh
 //
-// Copyright 2018 hUnit project developers.
+// Copyright 2018-2020 Nathan Wehr.
 // See COPYRIGHT.txt
 // 
-// This file is part of the hUnit project and subject to license terms.
+// This file is part of the hhUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
-namespace hUnit;
+namespace hhUnit;
 
-require_once dirname(__FILE__) . "/AssertionBacktrace.hh";
+require_once \dirname(__FILE__) . "/AssertionBacktrace.hh";
+
+type SuccessHandlerFn = (function(AssertionBacktrace) : void);
+type FailureHandlerFn = (function(AssertionBacktrace, string, string) : void);
 
 class Assertion {
     private bool $not = false;
 
-    public function __construct(private (function(AssertionLocation) : void) $successHandler, private (function(AssertionLocation) : void) $failureHandler) {}
+    public function __construct(private SuccessHandlerFn $successHandler, private FailureHandlerFn $failureHandler) {}
 
     private function backtrace() : AssertionBacktrace {
         $trace = \debug_backtrace();
@@ -25,26 +28,26 @@ class Assertion {
         return new AssertionBacktrace($trace[$assertionDepth]["file"], $trace[$assertionDepth]["line"]);
     }
 
-    protected function assert(bool $evaluation) : void {
+    protected function assert(bool $evaluation, string $expected, string $got) : void {
         $backtrace = $this->backtrace(); 
 
         if($this->not ? !$evaluation : $evaluation) {
-            call_user_func($this->successHandler, $backtrace);
+            \call_user_func($this->successHandler, $backtrace);
         } else {
-            call_user_func($this->failureHandler, $backtrace);
+            \call_user_func($this->failureHandler, $backtrace, $expected, $got);
         }
     }
 
-    public function not() : Assertion {
+    public function not() : this {
         $this->not = true;
         return $this;
     }
 }
 
-require_once dirname(__FILE__) . "/BoolAssertion.hh";
-require_once dirname(__FILE__) . "/IntAssertion.hh";
-require_once dirname(__FILE__) . "/FloatAssertion.hh";
-require_once dirname(__FILE__) . "/StringAssertion.hh";
-require_once dirname(__FILE__) . "/ArrayAssertion.hh";
-require_once dirname(__FILE__) . "/MapAssertion.hh";
-require_once dirname(__FILE__) . "/VectorAssertion.hh";
+require_once \dirname(__FILE__) . "/BoolAssertion.hh";
+require_once \dirname(__FILE__) . "/IntAssertion.hh";
+require_once \dirname(__FILE__) . "/FloatAssertion.hh";
+require_once \dirname(__FILE__) . "/StringAssertion.hh";
+require_once \dirname(__FILE__) . "/ArrayAssertion.hh";
+require_once \dirname(__FILE__) . "/MapAssertion.hh";
+require_once \dirname(__FILE__) . "/VectorAssertion.hh";

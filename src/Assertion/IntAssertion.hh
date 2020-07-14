@@ -1,38 +1,38 @@
 <?hh
 //
-// Copyright 2018 hUnit project developers.
+// Copyright 2018-2020 Nathan Wehr.
 // See COPYRIGHT.txt
 // 
-// This file is part of the hUnit project and subject to license terms.
+// This file is part of the hhUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
-namespace hUnit;
+namespace hhUnit;
 
-require_once dirname(__FILE__) . "/Assertion.hh";
+require_once \dirname(__FILE__) . "/Assertion.hh";
 
 class IntAssertion extends Assertion {
-    public function __construct(private int $int, (function(AssertionLocation) : void) $successHandler, (function(AssertionLocation) : void) $failureHandler) {
+    public function __construct(private int $int, SuccessHandlerFn $successHandler, FailureHandlerFn $failureHandler) {
         parent::__construct($successHandler, $failureHandler);
     }
 
     public function equalTo(int $int) : void {
-        $this->assert($this->int == $int);
+        $this->assert($this->int == $int, (string)$this->int, (string)$int);
     }
 
     public function greaterThan(int $int) : void {
-        $this->assert($this->int > $int);
+        $this->assert($this->int > $int, (string)$this->int, (string)$int);
     }
 
     public function greaterThanOrEqualTo(int $int) : void {
-        $this->assert($this->int >= $int);
+        $this->assert($this->int >= $int, (string)$this->int, (string)$int);
     }
 
     public function lessThan(int $int) : void {
-        $this->assert($this->int < $int);
+        $this->assert($this->int < $int, (string)$this->int, (string)$int);
     }
 
     public function lessThanOrEqualTo(int $int) : void {
-        $this->assert($this->int <= $int);
+        $this->assert($this->int <= $int, (string)$this->int, (string)$int);
     }
 }

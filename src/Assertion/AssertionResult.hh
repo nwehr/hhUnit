@@ -9,6 +9,6 @@
 
 namespace hhUnit;
 
-class AssertionBacktrace {
-    public function __construct(public string $file, public int $line) {}
+class AssertionResult {
+	public function __construct(public bool $didPass, public string $expected, public string $got){}
 }

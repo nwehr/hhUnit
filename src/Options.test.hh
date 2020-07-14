@@ -1,12 +1,10 @@
-<?hh // decl
-namespace hUnit\Tests\Options;
+<?hh
+namespace hhUnit;
 
-use hUnit\Assert;
+require_once \dirname(__FILE__) . "/../src/Options.hh";
 
-require_once dirname(__FILE__) . "/../src/Options.hh";
-
-class TestableOptions extends \hUnit\Options {
-    public function __construct(array $opt) {
+class TestableOptions extends Options {
+    public function __construct(darray<string, mixed> $opt) {
         parent::__construct($opt);
     }
 }
@@ -15,7 +13,7 @@ class TestableOptions extends \hUnit\Options {
 class OptionsTests {
     <<Test>>
     public function shouldListTests_ReturnsTrue(Assert $assert) : void {
-        $opt = [
+        $opt = darray<string, mixed>[
             "l" => false
         ];
 
@@ -26,7 +24,7 @@ class OptionsTests {
 
     <<Test>>
     public function shouldShowHelp_ReturnsTrue(Assert $assert) : void {
-        $opt = [
+        $opt = darray<string, mixed>[
             "h" => false
         ];
 
@@ -37,7 +35,7 @@ class OptionsTests {
 
     <<Test>>
     public function sourceFileDirectories_ReturnsVector(Assert $assert) : void {
-        $opt = [
+        $opt = darray<string, mixed>[
             "d" => "/var/www/tests"
         ];
 
@@ -48,7 +46,7 @@ class OptionsTests {
 
     <<Test>>
     public function namespaceNames_ReturnsVector(Assert $assert) : void {
-        $opt = [
+        $opt = darray<string, mixed>[
             "n" => "hUnit\Tests\TypeAssertions"
         ];
 

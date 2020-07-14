@@ -1,7 +1,7 @@
-<?hh // decl
-namespace hUnit\Tests\TypeAssertions;
+<?hh // partial
+namespace hhUnit;
 
-use hUnit\Assert;
+use hhUnit\Assert;
 
 <<TestSuite>>
 class FloatAssertionTests {

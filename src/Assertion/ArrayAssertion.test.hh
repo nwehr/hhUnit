@@ -1,22 +1,22 @@
-<?hh // decl
-namespace hUnit\Tests\TypeAssertions;
+<?hh // partial
+namespace hhUnit;
 
-use hUnit\Assert;
+use hhUnit\Assert;
 
 <<TestSuite>>
 class ArrayAssertionTests {
     <<Test>>
     public function equalTo(Assert $assert) : void {
-        $assert->array([1,2])->equalTo([1,2]);
+        $assert->array(varray<int>[1,2])->equalTo(varray<int>[1,2]);
     }
 
     <<Test>>
     public function notEqualTo(Assert $assert) : void {
-        $assert->array([1,2])->not()->equalTo([2,3]);
+        $assert->array(varray<int>[1,2])->not()->equalTo(varray<int>[2,3]);
     }
 
     <<Test>>
     public function contains(Assert $assert) : void {
-        $assert->array([1,2,3])->contains(1);
+        $assert->array(varray<int>[1,2,3])->contains(1);
     }
 }

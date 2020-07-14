@@ -1,7 +1,5 @@
-<?hh // decl
-namespace hUnit\Tests\Reflection;
-
-use hUnit\Assert;
+<?hh 
+namespace hhUnit;
 
 <<TestSuite, Skip>>
 class SkippedTests {
@@ -24,7 +22,7 @@ class SkippedTests {
 class ReflectionTestSuiteTests {
     <<Test>>
     public function shouldSkip_ReturnsTrue(Assert $assert) : void {
-        $testSuite = new \hUnit\ReflectionTestSuite("hUnit\Tests\Reflection\SkippedTests");
+        $testSuite = new ReflectionTestSuite("hhUnit\SkippedTests");
 
         $shouldSkip = $testSuite->shouldSkip();
 
@@ -33,7 +31,7 @@ class ReflectionTestSuiteTests {
 
     <<Test>>
     public function shouldSkipMethod_ReturnsTrue(Assert $assert) : void {
-        $testSuite = new \hUnit\ReflectionTestSuite("hUnit\Tests\Reflection\SkippedTests");
+        $testSuite = new ReflectionTestSuite("hhUnit\SkippedTests");
 
         $shouldSkipMethod = $testSuite->shouldSkipMethod($testSuite->getMethod("bar"));
 
@@ -42,7 +40,7 @@ class ReflectionTestSuiteTests {
 
     <<Test>>
     public function getTestMethods_ReturnsVector(Assert $assert) : void {
-        $testSuite = new \hUnit\ReflectionTestSuite("hUnit\Tests\Reflection\SkippedTests");
+        $testSuite = new ReflectionTestSuite("hhUnit\SkippedTests");
 
         $testMethods = $testSuite->getTestMethods()->map((\ReflectionMethod $method) ==> $method->getName());
 

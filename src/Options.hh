@@ -1,13 +1,13 @@
 <?hh
 //
-// Copyright 2018 hUnit project developers.
+// Copyright 2018-2020 Nathan Wehr.
 // See COPYRIGHT.txt
 // 
-// This file is part of the hUnit project and subject to license terms.
+// This file is part of the hhUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
-namespace hUnit;
+namespace hhUnit;
 
 interface IOptions {
     public function directoryPaths() : Vector<string>;
@@ -19,41 +19,45 @@ interface IOptions {
 class Options implements IOptions {
     protected static ?Options $instance = null;
 
-    protected function __construct(protected array $opt) {}
+    protected function __construct(protected darray<string, mixed> $opt) {}
 
     public static function instance() : Options {
         if(!self::$instance) {
-            self::$instance = new self(getopt("hld:n:"));
+            self::$instance = new self(\getopt("hld:n:"));
         }
 
         return self::$instance;
     }
 
     public function directoryPaths() : Vector<string> {
-        if(is_array($this->opt["d"])) {
-            return new Vector($this->opt["d"]);
+        if (!\array_key_exists("d", $this->opt)) {
+            return Vector{};
+        }
+
+        if(\is_array($this->opt["d"])) {
+            return $this->opt["d"] |> new Vector($$);
         } else {
-            return Vector{$this->opt["d"]};
+            return Vector{(string)$this->opt["d"]};
         }
     }
 
     public function namespaceNames() : Vector<string> {
-        if(!array_key_exists("n", $this->opt)) {
+        if(!\array_key_exists("n", $this->opt)) {
             return Vector{};
         } else {
-            if(is_array($this->opt["n"])) {
+            if(\is_array($this->opt["n"])) {
                 return new Vector($this->opt["n"]);
             } else {
-                return Vector{$this->opt["n"]};
+                return Vector{(string)$this->opt["n"]};
             }
         }
     }
 
     public function listTests() : bool {
-        return array_key_exists("l", $this->opt);
+        return \array_key_exists("l", $this->opt);
     }
 
     public function showHelp() : bool {
-        return array_key_exists("h", $this->opt);
+        return \array_key_exists("h", $this->opt);
     }
 }

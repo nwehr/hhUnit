@@ -1,13 +1,13 @@
 <?hh
 //
-// Copyright 2018 hUnit project developers.
+// Copyright 2018-2020 Nathan Wehr.
 // See COPYRIGHT.txt
 // 
-// This file is part of the hUnit project and subject to license terms.
+// This file is part of the hhUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
-namespace hUnit;
+namespace hhUnit;
 
 interface IFileSystemScanner {
     public function getSourcePaths(Vector<string> $directoryPaths) : Vector<string>;
@@ -18,7 +18,7 @@ class FileSystemScanner implements IFileSystemScanner {
     protected Vector<string> $ignorePaths = Vector{};
 
     protected function isSourceFile(string $path) : bool {
-        $pathInfo = new Map(pathinfo($path));
+        $pathInfo = new Map(\pathinfo($path));
 
         if($pathInfo->containsKey("extension") && $pathInfo["extension"] == "hh") {
             return true; 
@@ -29,9 +29,9 @@ class FileSystemScanner implements IFileSystemScanner {
 
     protected function shouldIgnore(string $path) : bool {
         foreach($this->ignorePaths as $ignorePath) {
-            $pattern = "/^" . str_replace("/", "\/", $ignorePath) . "/";
+            $pattern = "/^" . \str_replace("/", "\/", $ignorePath) . "/";
 
-            if(preg_match($pattern, $path)) {
+            if(\preg_match($pattern, $path)) {
                 echo "$pattern == $path\n";
                 return true; 
             }
@@ -43,36 +43,46 @@ class FileSystemScanner implements IFileSystemScanner {
     protected function scanDirectoryForIgnoreFile(string $path) : void {
         $ignoreFilePath = $path . "/.hunitignore";
 
-        if(file_exists($ignoreFilePath)) {
-            $handle = fopen($ignoreFilePath, "r");
+        if(\file_exists($ignoreFilePath)) {
+            $handle = \fopen($ignoreFilePath, "r");
 
-            while(($line = fgets($handle)) !== false) {
-                $pathToIgnore = realpath(trim($line));
+            while(true) {
+                $line = \fgets($handle);
+
+                if ($line == false) {
+                    break;
+                }
+
+                $pathToIgnore = \realpath(\trim($line));
 
                 if($pathToIgnore) {
                     $this->ignorePaths->add($pathToIgnore);
                 }
             }
 
-            fclose($handle);
+            \fclose($handle);
         }
     }
 
     protected function scanPath(string $path) : void {
-
-
         if($this->shouldIgnore($path)) {
             return;
         }
 
-        if(is_dir($path)) {
-            chdir($path);
+        if(\is_dir($path)) {
+            \chdir($path);
 
             $this->scanDirectoryForIgnoreFile($path);            
+            
+            $directory = \dir($path);
 
-            $directory = dir($path);
+            while(true) {
+                $entry = $directory->read();
 
-            while(($entry = $directory->read())) {
+                if (!$entry) {
+                    break;
+                }
+
                 if($entry == "." || $entry == "..") {
                     continue;
                 }

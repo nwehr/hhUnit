@@ -1,7 +1,7 @@
-<?hh // decl
-namespace hUnit\Tests\TypeAssertions;
+<?hh
+namespace hhUnit;
 
-use hUnit\Assert;
+use hhUnit\Assert;
 
 <<TestSuite>>
 class StringAssertionTests {

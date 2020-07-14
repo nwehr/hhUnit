@@ -1,15 +1,15 @@
 <?hh
 //
-// Copyright 2018 hUnit project developers.
+// Copyright 2018-2020 Nathan Wehr.
 // See COPYRIGHT.txt
 // 
-// This file is part of the hUnit project and subject to license terms.
+// This file is part of the hhUnit project and subject to license terms.
 // See LICENSE.txt
 //  
 
-namespace hUnit;
+namespace hhUnit;
 
-require_once dirname(__FILE__) . "/Assert.hh";
+require_once \dirname(__FILE__) . "/Assert.hh";
 
 class Exit {
     const OK = 0;
@@ -31,20 +31,23 @@ class hUnit {
     }
 
     protected function printStats() : void {
-        printf("Test Suites         : %d\n", $this->numTestSuites);
-        printf("Tests               : %d\n", $this->numTests);
-        printf("Assertions          : %d\n", $this->numAssertions);
-        printf("Assertion Failures  : %d\n", $this->numAssertionFailures);
-        printf("Skipped Test Suites : %d\n", $this->numSkippedTestSuites);
-        printf("Skipped Tests       : %d\n", $this->numSkippedTests);
+        \printf("Test Suites         : %d\n", $this->numTestSuites);
+        \printf("Tests               : %d\n", $this->numTests);
+        \printf("Assertions          : %d\n", $this->numAssertions);
+        \printf("Assertion Failures  : %d\n", $this->numAssertionFailures);
+        \printf("Skipped Test Suites : %d\n", $this->numSkippedTestSuites);
+        \printf("Skipped Tests       : %d\n", $this->numSkippedTests);
     }
 
     protected function printSuccess(string $testSuiteName, string $testName, AssertionBacktrace $backtrace) : void {
-        printf("\033[1;32mSUCCESS\n%s::%s at %s:%d\033[0m\n\n", $testSuiteName, $testName, $backtrace->file, $backtrace->line);
+        \printf("\033[1;32mSUCCESS\n%s::%s in %s:%d\033[0m\n\n", $testSuiteName, $testName, $backtrace->file, $backtrace->line);
     }
 
-    protected function printFailure(string $testSuiteName, string $testName, AssertionBacktrace $backtrace) : void {
-        printf("\033[1;31mFAILED \n%s::%s at %s:%d\033[0m\n\n", $testSuiteName, $testName, $backtrace->file, $backtrace->line);
+    protected function printFailure(string $testSuiteName, string $testName, AssertionBacktrace $backtrace, string $lhs, string $rhs) : void {
+        $pathTokens = \explode("/", $backtrace->file);
+        $fileName = $pathTokens[\count($pathTokens) - 1];
+
+        \printf("\033[1;31mFAILED \n%s::%s in %s:%d\ncomparing '%s' and '%s'\033[0m\n\n", $testSuiteName, $testName, $fileName, $backtrace->line, $lhs, $rhs);
     }
 
     public function run() : int {
@@ -70,16 +73,16 @@ class hUnit {
                     ++$this->numAssertions;
                 };
 
-                $handleFailure = (AssertionBacktrace $backtrace) ==> {
+                $handleFailure = (AssertionBacktrace $backtrace, string $lhs, string $rhs) ==> {
                     ++$this->numAssertions;
                     ++$this->numAssertionFailures;
 
-                    $this->printFailure($testSuite->getName(), $testMethod->getName(), $backtrace);
+                    $this->printFailure($testSuite->getName(), $testMethod->getName(), $backtrace, $lhs, $rhs);
                 };
 
                 $assert = new Assert($handleSuccess, $handleFailure);
                 
-                $testMethod->invokeArgs($testSuiteInstance, [$assert]);
+                $testMethod->invokeArgs($testSuiteInstance, varray<mixed>[$assert]);
             }
         }
 

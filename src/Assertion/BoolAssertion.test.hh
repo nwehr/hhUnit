@@ -1,7 +1,5 @@
-<?hh // decl
-namespace hUnit\Tests\TypeAssertions;
-
-use hUnit\Assert;
+<?hh // partial
+namespace hhUnit;
 
 <<TestSuite>>
 class BoolAssertionTests {

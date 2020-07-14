@@ -1,13 +1,13 @@
 <?hh
 //
-// Copyright 2018 hUnit project developers.
+// Copyright 2018-2020 Nathan Wehr.
 // See COPYRIGHT.txt
 // 
-// This file is part of the hUnit project and subject to license terms.
+// This file is part of the hhUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
-namespace hUnit;
+namespace hhUnit;
 
 class ReflectionTestSuite extends \ReflectionClass {
 	public function getCategories() : Vector<string> {
@@ -17,7 +17,7 @@ class ReflectionTestSuite extends \ReflectionClass {
 			return Vector{};
 		}
 		
-		return new Vector<string>($attributes["Categories"]);
+		return Vector{(string)$attributes->get("Categories")};
 	}
 	
 	public function shouldSkip() : bool {

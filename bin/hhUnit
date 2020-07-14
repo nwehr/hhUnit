@@ -1,30 +1,30 @@
-#!/usr/bin/hhvm
+#!/usr/local/bin/hhvm
 <?hh
 //
-// Copyright 2018 hUnit project developers.
+// Copyright 2018-2020 Nathan Wehr.
 // See COPYRIGHT.txt
 // 
-// This file is part of the hUnit project and subject to license terms.
+// This file is part of the hhUnit project and subject to license terms.
 // See LICENSE.txt
 // 
 
-namespace hUnit;
+namespace hhUnit;
 
-require_once dirname(__FILE__) . "/../src/Options.hh";
-require_once dirname(__FILE__) . "/../src/TestSuiteLoader.hh";
-require_once dirname(__FILE__) . "/../src/hUnit.hh";
+require_once \dirname(__FILE__) . "/../src/Options.hh";
+require_once \dirname(__FILE__) . "/../src/TestSuiteLoader.hh";
+require_once \dirname(__FILE__) . "/../src/hUnit.hh";
 
 $options = Options::instance();
 
 if($options->showHelp()) {
-    print("Usage: hUnit [options]\n");
+    print("Usage: hhUnit [options]\n");
     print("  Options: \n");
     print("    -d <directory>, a directory containing unit tests\n");
     print("    -n <namespace>, a specified namespace to run unit tests\n");
     print("    -l, list test suites organized by namespace\n");
     print("    -h, display this help message\n");
     print("  Example:\n");
-    print("    hUnit [-l] -d <directory> [-d <directory>...] [-n <namespace>...]\n");
+    print("    hhUnit [-l] -d <directory> [-d <directory>...] [-n <namespace>...]\n");
 
     exit(Exit::OK);
 }
