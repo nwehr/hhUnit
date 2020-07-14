@@ -1,0 +1,16 @@
+{
+    "name": "nwehr/hhunit",
+    "type": "library",
+    "description": "Unit testing for HHVM",
+    "keywords": ["unit", "testing", "unittesting"],
+    "homepage": "https://github.com/nwehr/hhUnit",
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "Nathan Wehr",
+            "email": "gtolemans@gmail.com",
+            "homepage": "https://github.com/nwehr",
+            "role": "Developer"
+        }
+    ]
+}

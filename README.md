@@ -1,4 +1,4 @@
-# hUnit
+# hhUnit
 
 A unit test framework specifically for the Hack language.
 
@@ -7,8 +7,8 @@ A unit test framework specifically for the Hack language.
 To create a test suite, write a class with the `<<TestSuite>>` attribute. Individual tests use the `<<Test>>` attribute. You can skip an entire test suite or indivitual tests using the `<<Skip>>` attribute.
 
 ```
-<?hh // decl
-use hUnit\Assert;
+<?hh
+use hhUnit\Assert;
 
 <<TestSuite>>
 class MyTestSuite {
@@ -103,12 +103,12 @@ $assert->vector<string>(Vector{"value1"})->containsValue("value1");
 
 # Usage
 
-To use hUnit in your own project, create `Dockerfile.hunit-tester` in your project folder. Copy your tests into `/usr/local/tests`. You may also copy your entire project into `/usr/local/tests`. If you go this route, it is recommended that you utilize `.hunitignore` to prevent hunit from including source files that aren't test suites. 
+To use hhUnit in your own project, create `Dockerfile.hhUnit-tester` in your project folder. Copy your tests into `/usr/local/tests`. You may also copy your entire project into `/usr/local/tests`. If you go this route, it is recommended that you utilize `.hhUnitignore` to prevent hhUnit from including source files that aren't test suites. 
 
-#### Dockerfile.hunit-tester
+#### Dockerfile.hhUnit-tester
 
 ```
-FROM registry.gitlab.com/nwehr/hunit
+FROM registry.gitlab.com/nwehr/hhUnit
 
 COPY /path/to/your/tests /usr/local/tests
 ```
@@ -116,23 +116,18 @@ COPY /path/to/your/tests /usr/local/tests
 #### Build Tester
 
 ```
-docker build -t hunit-tester -f Dockerfile.hunit-tester .
+docker build -t hhUnit-tester -f Dockerfile.hhUnit-tester .
 ```
 
 #### Run Tester
 
 ```
-docker run -t --rm hunit-tester
+docker run -t --rm hhUnit-tester
 ```
 
 #### Tester Output
 
 ```
-Include /usr/local/tests/ArrayTestSuite.hh
-Include /usr/local/tests/BoolTestSuite.hh
-Include /usr/local/tests/IntTestSuite.hh
-Include /usr/local/tests/FloatTestSuite.hh
-Include /usr/local/tests/StringTestSuite.hh
 Test Suites        : 5
 Tests              : 18
 Assertions         : 20
@@ -141,9 +136,9 @@ Assertion Failures : 0
 
 ## Ignore
 
-To prevent hUnit from including individual source files or entire directories add a `.hunitignore` file in your tests directory.
+To prevent hhUnit from including individual source files or entire directories add a `.hhunitignore` file in your tests directory.
 
-#### .hunitignore
+#### .hhunitignore
 
 ```
 ./IgnoredTestSuite.hh

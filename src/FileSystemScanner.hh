@@ -41,7 +41,7 @@ class FileSystemScanner implements IFileSystemScanner {
     }
 
     protected function scanDirectoryForIgnoreFile(string $path) : void {
-        $ignoreFilePath = $path . "/.hunitignore";
+        $ignoreFilePath = $path . "/.hhunitignore";
 
         if(\file_exists($ignoreFilePath)) {
             $handle = \fopen($ignoreFilePath, "r");
