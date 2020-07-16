@@ -12,55 +12,58 @@ namespace hhUnit;
 
 require_once \dirname(__FILE__) . "/../src/Options.hh";
 require_once \dirname(__FILE__) . "/../src/TestSuiteLoader.hh";
-require_once \dirname(__FILE__) . "/../src/hUnit.hh";
+require_once \dirname(__FILE__) . "/../src/hhUnit.hh";
 
-$options = Options::instance();
+<<__EntryPoint>>
+function main() : void {
+    $options = Options::instance();
 
-if($options->showHelp()) {
-    print("Usage: hhUnit [options]\n");
-    print("  Options: \n");
-    print("    -d <directory>, a directory containing unit tests\n");
-    print("    -n <namespace>, a specified namespace to run unit tests\n");
-    print("    -l, list test suites organized by namespace\n");
-    print("    -h, display this help message\n");
-    print("  Example:\n");
-    print("    hhUnit [-l] -d <directory> [-d <directory>...] [-n <namespace>...]\n");
+    if($options->showHelp()) {
+        print("Usage: hhUnit [options]\n");
+        print("  Options: \n");
+        print("    -d <directory>, a directory containing unit tests\n");
+        print("    -n <namespace>, a specified namespace to run unit tests\n");
+        print("    -l, list test suites organized by namespace\n");
+        print("    -h, display this help message\n");
+        print("  Example:\n");
+        print("    hhUnit [-l] -d <directory> [-d <directory>...] [-n <namespace>...]\n");
 
-    exit(Exit::OK);
-}
-
-if($options->includePaths()) {
-    \ini_set("include_path", \implode(":", $options->includePaths()));
-}
-
-$testSuiteLoader = TestSuiteLoader::instance(); 
-
-$namespaceNames = $options->namespaceNames();
-
-if(!$namespaceNames->count()) {
-    $namespaceNames = $testSuiteLoader->getNamespaceNames();
-}
-
-if($options->listTests()) {
-    foreach($namespaceNames as $namespaceName) {
-        print("$namespaceName\n");
-
-        foreach($testSuiteLoader->getTestSuitesByNamespace($namespaceName) as $testSuite) {
-            $testSuiteName = $testSuite->getShortName();
-
-            print("    $testSuiteName\n");
-        }
-
-        print("\n");
-    }
-} else {
-    $testSuites = Vector{}; 
-
-    foreach($namespaceNames as $namespaceName) {
-        foreach($testSuiteLoader->getTestSuitesByNamespace($namespaceName) as $testSuite) {
-            $testSuites[] = $testSuite;
-        }
+        exit(Exit::OK);
     }
 
-    exit((new hUnit($testSuites))->run()); 
+    if($options->includePaths()) {
+        \ini_set("include_path", \implode(":", $options->includePaths()));
+    }
+
+    $testSuiteLoader = TestSuiteLoader::instance(); 
+
+    $namespaceNames = $options->namespaceNames();
+
+    if(!$namespaceNames->count()) {
+        $namespaceNames = $testSuiteLoader->getNamespaceNames();
+    }
+
+    if($options->listTests()) {
+        foreach($namespaceNames as $namespaceName) {
+            print("$namespaceName\n");
+
+            foreach($testSuiteLoader->getTestSuitesByNamespace($namespaceName) as $testSuite) {
+                $testSuiteName = $testSuite->getShortName();
+
+                print("    $testSuiteName\n");
+            }
+
+            print("\n");
+        }
+    } else {
+        $testSuites = Vector{}; 
+
+        foreach($namespaceNames as $namespaceName) {
+            foreach($testSuiteLoader->getTestSuitesByNamespace($namespaceName) as $testSuite) {
+                $testSuites[] = $testSuite;
+            }
+        }
+
+        exit((new hhUnit($testSuites))->run());
+    }
 }

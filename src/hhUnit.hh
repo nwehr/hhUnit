@@ -16,7 +16,7 @@ class Exit {
     const ERROR = 1;
 }
 
-class hUnit {
+class hhUnit {
     protected int $numTestSuites = 0;
     protected int $numTests = 0;
 
