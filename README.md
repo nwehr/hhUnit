@@ -105,21 +105,7 @@ $assert->vector<string>(Vector{"value1"})->containsValue("value1");
 
 To use hhUnit in your own project, create `Dockerfile.hhUnit-tester` in your project folder. Copy your tests into `/usr/local/tests`. You may also copy your entire project into `/usr/local/tests`. If you go this route, it is recommended that you utilize `.hhUnitignore` to prevent hhUnit from including source files that aren't test suites. 
 
-#### Dockerfile.hhUnit-tester
-
-```
-FROM registry.gitlab.com/nwehr/hhUnit
-
-COPY /path/to/your/tests /usr/local/tests
-```
-
-#### Build Tester
-
-```
-docker build -t hhUnit-tester -f Dockerfile.hhUnit-tester .
-```
-
-#### Run Tester
+#### Run Tests
 
 ```
 docker run -t --rm hhUnit-tester

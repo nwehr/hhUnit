@@ -1,4 +1,4 @@
-#!/usr/local/bin/hhvm
+#!/usr/bin/env hhvm
 <?hh
 //
 // Copyright 2018-2020 Nathan Wehr.
@@ -67,3 +67,5 @@ function main() : void {
         exit((new hhUnit($testSuites))->run());
     }
 }
+
+main();
