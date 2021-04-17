@@ -101,14 +101,16 @@ $assert->vector<string>(Vector{"value1"})->equalTo(Vector{"value1});
 $assert->vector<string>(Vector{"value1"})->containsValue("value1");
 ```
 
-# Usage
+# Install
 
-To use hhUnit in your own project, create `Dockerfile.hhUnit-tester` in your project folder. Copy your tests into `/usr/local/tests`. You may also copy your entire project into `/usr/local/tests`. If you go this route, it is recommended that you utilize `.hhUnitignore` to prevent hhUnit from including source files that aren't test suites. 
+```
+$ composer require nwehr/hhunit
+```
 
 #### Run Tests
 
 ```
-docker run -t --rm hhUnit-tester
+./vendor/bin/hhUnit
 ```
 
 #### Tester Output
